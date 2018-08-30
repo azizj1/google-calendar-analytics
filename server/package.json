@@ -1,0 +1,23 @@
+{
+  "name": "google-calendar-analytics-server",
+  "version": "1.0.0",
+  "description": "RESTful API via Express for Google Calendar Analytics Web App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azizj1/google-calendar-analytics.git"
+  },
+  "author": "Aziz Javed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/azizj1/google-calendar-analytics/issues"
+  },
+  "homepage": "https://github.com/azizj1/google-calendar-analytics#readme",
+  "devDependencies": {
+    "serverless-offline": "^3.25.10",
+    "serverless-plugin-typescript": "^1.1.5"
+  }
+}
