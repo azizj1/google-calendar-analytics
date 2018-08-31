@@ -1,11 +1,11 @@
-import express, {Request, Response, NextFunction} from 'express';
-import bodyParser from 'body-parser';
-import logger from 'morgan';
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
+import * as logger from 'morgan';
 import chalk from 'chalk';
 import routes from './routes';
 
 logger.token('datetime', _ => `[${chalk.cyan((new Date()).toLocaleString())}]`);
-logger.token('status', (req : Request) => {
+logger.token('status', (req : express.Request) => {
     const status = req.res && req.res.statusCode || 0;
     switch (true) {
         case(status < 199):
@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use('/', routes);
 
 // catch 404 and forward to error handler
-app.use((_, __, next : NextFunction) => {
+app.use((_, __, next: express.NextFunction) => {
     const err = new Error('Resource not found')as any;
     err.status = 404;
     next(err);
@@ -37,7 +37,7 @@ app.use((_, __, next : NextFunction) => {
 // error handlers development error handler will print stacktrace notice how
 // this middleware has four parameters
 if (app.get('env') === 'development') {
-    app.use((err : any, _ : Request, res : Response, __ : NextFunction) => {
+    app.use((err : any, _: express.Request, res : express.Response, __: any) => {
         console.log(err.message);
         res.status(err.status || 500);
         res.json({message: err.message, error: err, stack: err.stack});
@@ -45,7 +45,7 @@ if (app.get('env') === 'development') {
 }
 
 // production error handler no stacktraces leaked to user
-app.use((err : any, _ : Request, res : Response, __ : NextFunction) => {
+app.use((err : any, _ : express.Request, res : express.Response, __ : any) => {
     console.log(err.message);
     res.status(err.status || 500);
     res.json({message: err.message});

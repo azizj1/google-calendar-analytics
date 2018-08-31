@@ -11,7 +11,7 @@
         "forin": true,
         "interface-name": true,
         "label-position": true,
-        "max-line-length": [true, 120],
+        "max-line-length": [true, 140],
         "no-bitwise": true,
         "no-console": [ true,
             "debug",
