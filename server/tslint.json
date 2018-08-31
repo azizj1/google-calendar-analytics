@@ -1,0 +1,54 @@
+{
+    "rules": {
+        "ban": [ true,
+            [ "$", "extend" ],
+            [ "_", "isNull" ],
+            [ "_", "isUndefined" ]
+        ],
+        "class-name": true,
+        "comment-format": [ true, "check-space" ],
+        "eofline": true,
+        "forin": true,
+        "interface-name": true,
+        "label-position": true,
+        "max-line-length": [true, 120],
+        "no-bitwise": true,
+        "no-console": [ true,
+            "debug",
+            "info",
+            "time",
+            "timeEnd",
+            "trace"
+        ],
+        "no-construct": true,
+        "no-debugger": true,
+        "no-duplicate-variable": true,
+        "no-empty": true,
+        "no-eval": true,
+        "no-trailing-whitespace": true,
+        "no-unused-expression": true,
+        "no-use-before-declare": true,
+        "no-var-requires": true,
+        "one-line": [ true,
+            "check-catch",
+            "check-open-brace",
+            "check-whitespace"
+        ],
+        "quotemark": [ true, "single" ],
+        "radix": true,
+        "semicolon": true,
+        "trailing-comma": [true, {
+            "multiline": "never", "singleline": "never"
+        }],
+        "triple-equals": [ true, "allow-null-check" ],
+        "variable-name": [ true, "ban-keywords", "check-format", "allow-pascal-case" ],
+        "whitespace": [ true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-separator",
+            "check-type"
+        ]
+    },
+    "defaultSeverity": "warning"
+}

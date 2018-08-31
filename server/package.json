@@ -4,7 +4,8 @@
   "description": "RESTful API via Express for Google Calendar Analytics Web App",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "rimraf .build && tsc && node .build/bin/www.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,22 @@
   },
   "homepage": "https://github.com/azizj1/google-calendar-analytics#readme",
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.11",
+    "@types/body-parser": "^1.17.0",
+    "@types/chalk": "^2.2.0",
+    "@types/debug": "^0.0.30",
+    "@types/morgan": "^1.7.35",
+    "rimraf": "^2.6.2",
     "serverless-offline": "^3.25.10",
-    "serverless-plugin-typescript": "^1.1.5"
+    "serverless-plugin-typescript": "^1.1.5",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "chalk": "^2.4.1",
+    "debug": "^3.1.0",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0"
   }
 }
