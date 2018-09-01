@@ -30,7 +30,7 @@ const router = Router();
 router.use('/', async (_, res: Response, __) => {
     try {
         const data = await calendarApi.Events.list(config.calendarId.fitness, params) as IDataGoogleCalendarEvent[];
-        const models = data.map(e => {
+        const classes = data.map(e => {
             const start = moment(e.start.dateTime);
             const end = moment(e.end.dateTime);
             return {
@@ -42,20 +42,24 @@ router.use('/', async (_, res: Response, __) => {
                 durationHours: end.diff(start, 'hours', true)
             } as IEvent;
         });
-        const totalHours = getTotal(models);
-        const totalNoGiHours = getTotal(models.filter(m => m.title.indexOf('NoGi') > -1));
-        const totalNoGiAndGiHours = getTotal(models.filter(m => m.title.indexOf('Gi') > -1));
+        const totalHours = getTotal(classes);
+        const totalNoGiHours = getTotal(classes.filter(m => m.title.indexOf('NoGi') > -1));
+        const totalNoGiAndGiHours = getTotal(classes.filter(m => m.title.indexOf('Gi') > -1));
         const totalGiHours = totalNoGiAndGiHours - totalNoGiHours;
+        const totalWeeks = moment().diff(bjjBegin, 'weeks', true);
         const response = {
             totalHours,
             totalNoGiHours,
             totalGiHours,
-            avgHrsPerWeek: totalHours / moment().diff(bjjBegin, 'weeks', true),
-            averageHourPerSession: totalHours / models.length,
-            trainingDuration: moment.duration(bjjBegin.diff(moment(), 'hours', true), 'hours').humanize(),
-            minHours: models.reduce((acc, curr) => curr.durationHours < acc ? curr.durationHours : acc, Number.MAX_SAFE_INTEGER),
-            maxHours: models.reduce((acc, curr) => curr.durationHours > acc ? curr.durationHours : acc, Number.MIN_SAFE_INTEGER),
-            models
+            avgHrsPerWeek: totalHours / totalWeeks,
+            avgClassesPerWeek: classes.length / totalWeeks,
+            averageHourPerSession: totalHours / classes.length,
+            trainingDuration: humanize(bjjBegin),
+            minHours: classes.reduce((acc, curr) => curr.durationHours < acc ? curr.durationHours : acc,
+                Number.MAX_SAFE_INTEGER),
+            maxHours: classes.reduce((acc, curr) => curr.durationHours > acc ? curr.durationHours : acc,
+                Number.MIN_SAFE_INTEGER),
+            classes: classes.reverse()
         };
         res.json(response);
     } catch (err) {
@@ -65,5 +69,18 @@ router.use('/', async (_, res: Response, __) => {
 
 function getTotal(events: IEvent[]) {
     return events.reduce((acc, curr) => acc + curr.durationHours, 0);
+}
+
+function humanize(from: moment.Moment) {
+    const to = moment();
+    const yearsDiff = to.diff(from, 'years');
+    from = from.add(yearsDiff, 'years');
+
+    const monthsDiff = to.diff(from, 'months');
+    from = from.add(monthsDiff, 'months');
+
+    const daysDiff = to.diff(from, 'days');
+    const pluralize = (val: number, suffix: string) => val < 1 ? '' : `${val} ${suffix}${val > 1 ? 's ' : ' '}`;
+    return `${pluralize(yearsDiff, 'year')}${pluralize(monthsDiff, 'month')}${pluralize(daysDiff, 'day')}`.slice(0, -1);
 }
 export default router;
