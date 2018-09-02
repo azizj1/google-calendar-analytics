@@ -1,2 +1,5 @@
 # Google Calendar Analytics
-Web app that uses [Google Calendar API](https://developers.google.com/calendar/) to inquire my calendars and display aggregated and relevant information.
+ExpressJS RESTful API that uses [Google Calendar API](https://developers.google.com/calendar/) to inquire my calendars and provide the following endpoints:
+
+* /calendars/fitness/bjj
+* /calendars/family-friends/sex

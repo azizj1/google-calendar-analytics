@@ -18,6 +18,9 @@
     "url": "https://github.com/azizj1/google-calendar-analytics/issues"
   },
   "homepage": "https://github.com/azizj1/google-calendar-analytics#readme",
+  "_moduleAliases": {
+    "~": ".build"
+  },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.11",
     "@types/body-parser": "^1.17.0",
@@ -25,6 +28,7 @@
     "@types/debug": "^0.0.30",
     "@types/moment": "^2.13.0",
     "@types/morgan": "^1.7.35",
+    "module-alias": "^2.1.0",
     "rimraf": "^2.6.2",
     "serverless-offline": "^3.25.10",
     "serverless-plugin-typescript": "^1.1.5",

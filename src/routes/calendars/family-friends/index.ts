@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import fitness from './fitness';
+import sex from './sex';
 
 const router = Router();
-router.use('/fitness', fitness);
+router.use('/sex', sex);
 export default router;
