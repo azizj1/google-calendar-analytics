@@ -1,14 +1,14 @@
 import { Router, Response } from 'express';
-import calendarService from '~/services/calendarService';
-import calendarUtil from '~/services/calendarUtil';
-import { sexBegin } from '~/services/calendarQueries';
+import calendarApi from '~/api/calendarApi';
+import util from '~/services/util';
+import { sexBegin } from '~/api/calendarQueries';
 import * as moment from 'moment';
 
 const router = Router();
 router.use('/', async (_, res: Response, __) => {
     try {
-        const sexTimes = await calendarService.getAllSexEvents();
-        const totalMins = calendarUtil.totalHours(sexTimes) * 60;
+        const sexTimes = await calendarApi.getAllSexEvents();
+        const totalMins = util.totalHours(sexTimes) * 60;
         const totalWeeks = moment().diff(sexBegin, 'weeks', true);
         const response = {
             totalHours: totalMins / 60,

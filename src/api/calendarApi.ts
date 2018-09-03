@@ -1,11 +1,13 @@
-import * as fs from 'fs';
+// tslint:disable:no-var-requires
+
 import * as moment from 'moment';
 import { IDataGoogleCalendarEvent, IEvent } from '~/models';
-import { bjjQuery, sexQuery } from './calendarQueries';
+import { bjjQuery, sexQuery } from '~/api/calendarQueries';
+import { credentials } from '~/api/credentials';
+import bjjService from '~/services/bjjService';
 
-// tslint:disable-next-line:no-var-requires
 const CalendarAPI = require('node-google-calendar');
-const { private_key, client_email } = JSON.parse(fs.readFileSync('./credentials.json', 'utf8'));
+const { private_key, client_email } = credentials;
 const config = {
     serviceAcctId: client_email,
     timezone: 'UTC-05:00',
@@ -16,7 +18,7 @@ const config = {
     key: private_key
 };
 
-class CalendarService {
+class CalendarApi {
     private calendarApi: any;
 
     constructor() {
@@ -26,7 +28,9 @@ class CalendarService {
     async getAllBjjEvents() {
         const data =
             await this.calendarApi.Events.list(config.calendarId.fitness, bjjQuery) as IDataGoogleCalendarEvent[];
-        return data.map(this._toEventModel);
+        return data
+            .map(this.toEventModel)
+            .map(bjjService.toBjjClass);
     }
 
     async getAllSexEvents() {
@@ -34,11 +38,11 @@ class CalendarService {
         const data =
             await this.calendarApi.Events.list(config.calendarId.familyFriends, sexQuery) as IDataGoogleCalendarEvent[];
         return data
-                .map(this._toEventModel)
+                .map(this.toEventModel)
                 .filter(e => e.title.toLowerCase().indexOf(title) >= 0);
     }
 
-    _toEventModel(e: IDataGoogleCalendarEvent): IEvent {
+    toEventModel = (e: IDataGoogleCalendarEvent): IEvent => {
         const start = moment(e.start.dateTime);
         const end = moment(e.end.dateTime);
         return {
@@ -47,10 +51,11 @@ class CalendarService {
             title: e.summary,
             notes: e.description,
             location: e.location,
-            durationHours: end.diff(start, 'hours', true)
+            durationHours: end.diff(start, 'hours', true),
+            isAllDay: e.start.dateTime == null
         };
     }
 }
 
-const calendarService = new CalendarService();
-export default calendarService;
+const calendarApi = new CalendarApi();
+export default calendarApi;
