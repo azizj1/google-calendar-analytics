@@ -27,11 +27,13 @@ router.use('/', async (_, res: Response, __) => {
             totalFundamentalHours: bjjService.totalFundamentalHours(classes),
             avgHrsPerWeek: totalHours / totalWeeks,
             avgClassesPerWeek: classes.length / totalWeeks,
-            averageHourPerSession: totalHours / classes.length,
+            avgHourPerSession: totalHours / classes.length,
             trainingDuration: util.humanize(bjjBegin),
             minHours: util.minHour(classes),
             maxHours: util.maxHour(classes),
-            classes: classes.reverse()
+            classes: classes.reverse().map(c => (
+                {...c, start: c.start.toISOString(true), end: c.end.toISOString(true)}
+            ))
         };
         res.json(response);
     } catch (err) {
