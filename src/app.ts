@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as logger from 'morgan';
+import * as cors from 'cors';
 import chalk from 'chalk';
 import routes from './routes';
 
@@ -22,6 +23,7 @@ logger.token('status', (req : express.Request) => {
 });
 
 const app = express();
+app.use(cors());
 app.use(logger(':datetime :method :url :status :response-time ms - :res[content-length] bytes'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

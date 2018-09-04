@@ -39,6 +39,7 @@ export enum BjjClassLevel {
     Fundamental,
     AllLevels,
     Advanced,
+    OpenMat,
     Unknown
 }
 

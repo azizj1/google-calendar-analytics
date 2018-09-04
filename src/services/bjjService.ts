@@ -28,6 +28,7 @@ export class BJJService {
         if (event.isAllDay) return BjjClassLevel.Unknown;
         if (event.title.toLowerCase().indexOf('fundamental') >= 0) return BjjClassLevel.Fundamental;
         if (event.title.toLowerCase().indexOf('advance') >= 0) return BjjClassLevel.Advanced;
+        if (event.title.toLowerCase().indexOf('open mat') >= 0) return BjjClassLevel.OpenMat;
         return BjjClassLevel.AllLevels;
     }
 
