@@ -35,13 +35,17 @@ const STATS = {
 const config = {
     mode: DEBUG ? 'development' : 'production',
     target: 'node',
-    entry: Object.assign({
-        'local': './src/bin/www.ts'
-    }, DEBUG ? {} : { 'lambda': './src/bin/lambda.ts' }),
+    entry: DEBUG ?
+        { 'local': './src/bin/www.ts' } :
+        { 'lambda': './src/bin/lambda.ts' }
+    ,
     output: {
         path: BUILD_DIR,
         filename: '[name].js',
-        publicPath: '/'
+        publicPath: '/',
+        ... DEBUG ? {} : {
+            libraryTarget: 'commonjs2'
+        }
     },
     resolve: {
         alias: {
@@ -78,7 +82,7 @@ const config = {
     },
     plugins: DEBUG ? [] : [new CleanPlugin([BUILD_DIR])],
     cache: DEBUG,
-    stats: STATS,
+    stats: STATS
 };
 
 module.exports = config;
