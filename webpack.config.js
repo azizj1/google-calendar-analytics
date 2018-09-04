@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const CleanPlugin = require('clean-webpack-plugin');
 
 const DEBUG = !process.argv.includes('-p');
@@ -36,10 +35,9 @@ const STATS = {
 const config = {
     mode: DEBUG ? 'development' : 'production',
     target: 'node',
-    entry: {
-        'local': './src/bin/www.ts',
-        'lambda': './src/bin/lambda.ts'
-    },
+    entry: Object.assign({
+        'local': './src/bin/www.ts'
+    }, DEBUG ? {} : { 'lambda': './src/bin/lambda.ts' }),
     output: {
         path: BUILD_DIR,
         filename: '[name].js',
@@ -78,11 +76,9 @@ const config = {
             }
         ]
     },
-    plugins: [
-        new CleanPlugin([BUILD_DIR]),
-    ],
+    plugins: DEBUG ? [] : [new CleanPlugin([BUILD_DIR])],
     cache: DEBUG,
-    stats: STATS
+    stats: STATS,
 };
 
 module.exports = config;
