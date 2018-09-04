@@ -1,5 +1,6 @@
 const path = require('path');
 const CleanPlugin = require('clean-webpack-plugin');
+const ZipPlugin = require('zip-webpack-plugin');
 
 const DEBUG = !process.argv.includes('-p');
 const BUILD_DIR = path.join(__dirname, 'build');
@@ -80,7 +81,10 @@ const config = {
             }
         ]
     },
-    plugins: DEBUG ? [] : [new CleanPlugin([BUILD_DIR])],
+    plugins: DEBUG ? [] : [
+        new CleanPlugin([BUILD_DIR]),
+        new ZipPlugin({filename: 'lambda.zip'})
+    ],
     cache: DEBUG,
     stats: STATS
 };
