@@ -1,5 +1,3 @@
-// tslint:disable-next-line:no-var-requires
-require('module-alias/register');
 import app from '../app';
 import * as debug from 'debug';
 import * as http from 'http';
