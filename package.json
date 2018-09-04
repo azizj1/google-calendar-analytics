@@ -4,7 +4,6 @@
   "description": "RESTful API via Express for Google Calendar Analytics Web App",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run dev-build && node ./build/local.js",
     "watch": "nodemon",
     "dev-build": "webpack --progress --colors",
