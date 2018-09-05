@@ -83,7 +83,7 @@ const config = {
     },
     plugins: DEBUG ? [] : [
         new CleanPlugin([BUILD_DIR]),
-        new ZipPlugin({filename: 'lambda.zip'})
+        new ZipPlugin({filename: 'lambda.zip', path: path.join(__dirname, 'terraform/modules/lambda')})
     ],
     cache: DEBUG,
     stats: STATS
