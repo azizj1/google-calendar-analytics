@@ -4,10 +4,10 @@
   "description": "RESTful API via Express for Google Calendar Analytics Web App",
   "main": "index.js",
   "scripts": {
-    "start": "npm run dev-build && node ./build/local.js",
+    "start": "webpack --progress --colors && node ./build/local.js",
     "watch": "nodemon",
-    "dev-build": "webpack --progress --colors",
-    "build": "webpack -p --progress --colors"
+    "build": "webpack -p --progress --colors",
+    "deploy": "npm run build && cd terraform && ./terraform_apply.sh dev && cd ../../.."
   },
   "repository": {
     "type": "git",

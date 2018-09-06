@@ -17,9 +17,14 @@ Install all project dependencies
 yarn
 ```
 
-While developing, kick off watcher for auto-local deploy
+While developing, kick off watcher with hot-reload
 ```
 yarn watch
+```
+
+To just run the server locally, 
+```
+yarn start
 ```
 ## Deployment
 The API is deployed to AWS Lambda + API Gateway using Terraform.
@@ -40,7 +45,7 @@ yarn build
 ```
 to do a production build of the app and have it copied over to the right destination.
 
-### Development Environment
+### Dev Environment
 Navigate to `./terraform/` and run either
 ```
 ./terraform_apply.sh dev
@@ -51,7 +56,7 @@ terraform_apply.bat dev
 ```
 on Windows.
 
-### Production Environment
+### Prod Environment
 Navigate to `./terraform/` and run either
 ```
 ./terraform_apply.sh prod
