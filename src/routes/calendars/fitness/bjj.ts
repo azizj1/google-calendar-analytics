@@ -24,6 +24,7 @@ router.use('/', async (_, res: Response, __) => {
                 afternoonHours: bjjService.totalAfternoonHours(classes),
                 eveningHours: bjjService.totalEveningHours(classes)
             },
+            promotions: bjjService.promotions(classes),
             totalFundamentalHours: bjjService.totalFundamentalHours(classes),
             avgHrsPerWeek: totalHours / totalWeeks,
             avgClassesPerWeek: classes.length / totalWeeks,

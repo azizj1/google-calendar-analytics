@@ -43,16 +43,17 @@ class CalendarApi {
     }
 
     toEventModel = (e: IDataGoogleCalendarEvent): IEvent => {
-        const start = moment(e.start.dateTime);
+        const start = moment(e.start.dateTime || e.start.date);
         const end = moment(e.end.dateTime);
+        const isAllDay = e.start.dateTime == null;
         return {
             start,
             end,
+            isAllDay,
             title: e.summary,
             notes: e.description,
             location: e.location,
-            durationHours: end.diff(start, 'hours', true),
-            isAllDay: e.start.dateTime == null
+            durationHours: isAllDay ? 0 : end.diff(start, 'hours', true)
         };
     }
 }

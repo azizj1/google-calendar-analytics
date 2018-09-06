@@ -16,8 +16,8 @@ export class Utility {
             Number.MIN_SAFE_INTEGER);
     }
 
-    humanize(from: moment.Moment) {
-        const to = moment();
+    humanize(from: moment.Moment, to = moment()) {
+        from = from.clone();
         const yearsDiff = to.diff(from, 'years');
         from = from.add(yearsDiff, 'years');
 

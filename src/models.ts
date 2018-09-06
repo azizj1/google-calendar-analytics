@@ -1,7 +1,8 @@
 import * as moment from 'moment';
 
 export interface IDataEventTime {
-    dateTime: string;
+    dateTime?: string;
+    date?: string;
 }
 
 export interface IDataGoogleCalendarEvent {

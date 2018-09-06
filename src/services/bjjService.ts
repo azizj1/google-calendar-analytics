@@ -1,4 +1,6 @@
 import { IEvent, IBjjClass, BjjClassTime, BjjClassType, BjjClassLevel } from '~/models';
+import util from '~/services/util';
+import { bjjBegin } from '~/api/calendarQueries';
 
 export class BJJService {
     toBjjClass = (event: IEvent): IBjjClass => ({
@@ -60,6 +62,21 @@ export class BJJService {
 
     totalGiHours(classes: IBjjClass[]) {
         return classes.filter(c => c.type === BjjClassType.Gi).reduce(this.sum, 0);
+    }
+
+    promotions(classes: IBjjClass[]) {
+        return classes
+                .filter(c => c.title.toLowerCase().indexOf('bjj promotion') >= 0)
+                .map(c => {
+                    const attrs = c.title.split(':')[1].split('-');
+                    return {
+                        color: attrs[0],
+                        stripes: attrs[2],
+                        date: c.start,
+                        timeItTook: util.humanize(bjjBegin, c.start),
+                        hoursItTook: classes.filter(c1 => c1.start < c.start).reduce(this.sum, 0)
+                    };
+                });
     }
 }
 
