@@ -32,7 +32,7 @@ router.use('/', async (_, res: Response, __) => {
             trainingDuration: util.humanize(bjjBegin),
             minHours: util.minHour(classes),
             maxHours: util.maxHour(classes),
-            classes: classes.reverse().map(c => (
+            classes: classes.map(c => (
                 {...c, start: c.start.toISOString(true), end: c.end.toISOString(true)}
             ))
         };
