@@ -7,7 +7,8 @@ export const bjjQuery = {
     q: 'BJJ',
     singleEvents: true,
     orderBy: 'startTime',
-    fields: 'items(description,end,location,start,summary)'
+    fields: 'items(description,end,location,start,summary)',
+    timeZone: 'America/Chicago'
 };
 
 export const sexBegin = moment(new Date(2017, 3, 0));
@@ -17,5 +18,6 @@ export const sexQuery = {
     q: 'Ahlam time',
     singleEvents: true,
     orderBy: 'startTime',
-    fields: 'items(description,end,location,start,summary)'
+    fields: 'items(description,end,location,start,summary)',
+    timeZone: 'America/Chicago'
 };

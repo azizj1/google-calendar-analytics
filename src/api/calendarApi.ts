@@ -1,7 +1,7 @@
 // tslint:disable:no-var-requires
 
 import * as moment from 'moment';
-import { IDataGoogleCalendarEvent, IEvent } from '~/models';
+import { IDataGoogleCalendarEvent, IEvent, IDataEventTime } from '~/models';
 import { bjjQuery, sexQuery } from '~/api/calendarQueries';
 import { credentials } from '~/api/credentials';
 import bjjService from '~/services/bjjService';
@@ -43,8 +43,8 @@ class CalendarApi {
     }
 
     toEventModel = (e: IDataGoogleCalendarEvent): IEvent => {
-        const start = moment(e.start.dateTime || e.start.date);
-        const end = moment(e.end.dateTime);
+        const start = this.toMoment(e.start);
+        const end = this.toMoment(e.end);
         const isAllDay = e.start.dateTime == null;
         return {
             start,
@@ -56,6 +56,10 @@ class CalendarApi {
             durationHours: isAllDay ? 0 : end.diff(start, 'hours', true)
         };
     }
+
+    toMoment = (d: IDataEventTime) => d.dateTime == null ?
+            moment.utc(d.date, 'YYYY-MM-DD') :
+            moment.parseZone(d.dateTime, 'YYYY-MM-DDTHH:mm:ssZZ', true)
 }
 
 const calendarApi = new CalendarApi();
