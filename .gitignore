@@ -3,3 +3,4 @@ build
 .terraform
 *.zip
 yarn-error.log
+credentials.json

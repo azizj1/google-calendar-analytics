@@ -1,20 +1,17 @@
 // tslint:disable:no-var-requires
-
 import * as moment from 'moment';
 import { IDataGoogleCalendarEvent, IEvent, IDataEventTime } from '~/models';
 import { bjjQuery, sexQuery } from '~/api/calendarQueries';
-import { credentials } from '~/api/credentials';
 import bjjService from '~/services/bjjService';
+import * as calendarIds from '~/../calendars.json';
+import * as creds from '~/../credentials.json';
 
 const CalendarAPI = require('node-google-calendar');
-const { private_key, client_email } = credentials;
+const { private_key, client_email } = creds;
 const config = {
     serviceAcctId: client_email,
     timezone: 'UTC-05:00',
-    calendarId: {
-        fitness: 'ehc9erufj4v9qd5fhfcrg99np0@group.calendar.google.com',
-        familyFriends: 'nfn39ng7n1d8p0r0snucj6hkk8@group.calendar.google.com'
-    },
+    calendarId: calendarIds,
     key: private_key
 };
 
