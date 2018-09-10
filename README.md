@@ -10,7 +10,7 @@ Being a node app, the app has a couple of prerequisites.
 ### Prerequisites
 * Node v8.10+. The project is deployed to AWS Lambda envrionment with node 8.10, so babel polyfills up to that version. 
 * Yarn globally installed (`npm i yarn -g`).
-* Access to your private Google Calendar. See [below for instructions](#grant-read-access-to-private-google-calendars)
+* Access to your private Google Calendar. See [below for instructions](#grant-read-access-to-private-google-calendars).
 
 ### Developing
 Install all project dependencies
