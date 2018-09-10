@@ -10,29 +10,7 @@ Being a node app, the app has a couple of prerequisites.
 ### Prerequisites
 * Node v8.10+. The project is deployed to AWS Lambda envrionment with node 8.10, so babel polyfills up to that version. 
 * Yarn globally installed (`npm i yarn -g`).
-* Access to your private Google Calendar
-  - Log into [Google Cloud Platform](https://console.cloud.google.com).
-  - Create a project called `google-calendar-analytics`.
-  - On the left sidemenu, go to API & Services > Dashboard.
-  - Click on `Enable APIs and Services`.
-  - Enable `Google Calendar API`.
-  - On the new left sidemenu, click on `Credentials.`
-  - Create `Service account key`.
-    - Sevice account: New service account
-    - Service account name: `server-owner`
-    - Role: Project > Owner
-    - Key type: JSON
-    - Click create. A JSON file will be downloaded.
-  - Place the downloaded file in root directory (same directory as this README.md).
-  - Rename it to `credentials.json`.
-  - (Optional) If you have [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) setup with S3 access, you can store the secret in S3 by doing `yarn store-secret`, which you can then later retrieve in a different machine if need be by doing `yarn get-secret`.
-    - You'll need to update `./package.json` file appropriately for this to work.
-  - Navigate to [Google Calendar](https://calendar.google.com) and give the Service account you just created read-only access to your BJJ calendar.
-    - Navigate to calendar's "Settings and sharing".
-    - Share your BJJ calendar with the `client_email` (of the form `server-owner@*.gserviceaccount.com`) found in the JSON file you downloaded earlier.
-       ![Example of calendar share](./docs/calendar-share.png)
-    - Scroll all the way down and get the Calendar ID (of the form `*@group.calendar.google.com`).
-    - Update `./calendars.json` with your BJJ calendar ID under `fitness`. **Don't** update the keys (e.g., `fitness`), only update the values. If you do want to update the names, also update `./src/api/calendarApi.ts`. 
+* Access to your private Google Calendar. See [below for instructions](#Grant-Read-Access-to-Private-Google-Calendars)
 
 ### Developing
 Install all project dependencies
@@ -100,3 +78,30 @@ on macOS, or
 terraform_apply.bat prod
 ```
 on Windows.
+
+## Grant Read Access to Private Google Calendars
+### Get Key JSON File
+1. Log into [Google Cloud Platform](https://console.cloud.google.com).
+2. Create a project called `google-calendar-analytics`.
+3. On the left sidemenu, go to API & Services > Dashboard.
+4. Click on `Enable APIs and Services`.
+5. Enable `Google Calendar API`.
+6. On the new left sidemenu, click on `Credentials.`
+7. Create `Service account key`.
+    - Sevice account: New service account
+    - Service account name: `server-owner`
+    - Role: Project > Owner
+    - Key type: JSON
+    - Click create. A JSON file will be downloaded.
+8. Place the downloaded file in root directory (same directory as this README.md).
+9. Rename it to `credentials.json`.
+10. (Optional) If you have [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) setup with S3 access, you can store the secret in S3 by doing `yarn store-secret`, which you can then later retrieve in a different machine if need be by doing `yarn get-secret`.
+    - You'll need to update `./package.json` file appropriately for this to work.
+
+### Share Calendar with Service Account
+Navigate to [Google Calendar](https://calendar.google.com) and give the Service account you just created read-only access to your BJJ calendar.
+1. Navigate to calendar's "Settings and sharing".
+2. Share your BJJ calendar with the `client_email` (of the form `server-owner@*.gserviceaccount.com`) found in the JSON file you downloaded earlier.
+       ![Example of calendar share](./docs/calendar-share.png)
+3. Scroll all the way down and get the Calendar ID (of the form `*@group.calendar.google.com`).
+4. Update `./calendars.json` with your BJJ calendar ID under `fitness`. **Don't** update the keys (e.g., `fitness`), only update the values. If you do want to update the names, also update `./src/api/calendarApi.ts`. 
