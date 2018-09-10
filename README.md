@@ -103,7 +103,7 @@ Navigate to [Google Calendar](https://calendar.google.com) and give the Service 
 1. Navigate to calendar's "Settings and sharing".
 2. Share your BJJ calendar with the `client_email` (of the form `server-owner@*.gserviceaccount.com`) found in the JSON file you downloaded earlier.
 
-  ![Example of calendar share](./docs/calendar-share.png)
+    ![Example of calendar share](./docs/calendar-share.png)
 
 3. Scroll all the way down and get the Calendar ID (of the form `*@group.calendar.google.com`).
 4. Update `./calendars.json` with your BJJ calendar ID under `fitness`. **Don't** update the keys (e.g., `fitness`), only update the values. If you do want to update the names, also update `./src/api/calendarApi.ts`. 
@@ -111,7 +111,7 @@ Navigate to [Google Calendar](https://calendar.google.com) and give the Service 
 ## License
 MIT License
 
-Copyright (c) [2018] [Aziz Javed]
+Copyright (c) 2018 Aziz Javed
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
