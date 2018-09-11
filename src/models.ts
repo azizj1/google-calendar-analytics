@@ -49,3 +49,11 @@ export interface IBjjClass extends IEvent {
     type: BjjClassType;
     level: BjjClassLevel;
 }
+
+export enum BjjBelt {
+    White,
+    Blue,
+    Purple,
+    Brown,
+    Black
+}

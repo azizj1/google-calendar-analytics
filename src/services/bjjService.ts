@@ -1,4 +1,4 @@
-import { IEvent, IBjjClass, BjjClassTime, BjjClassType, BjjClassLevel } from '~/models';
+import { IEvent, IBjjClass, BjjClassTime, BjjClassType, BjjClassLevel, BjjBelt } from '~/models';
 import util from '~/services/util';
 import { bjjBegin } from '~/api/calendarQueries';
 
@@ -66,9 +66,9 @@ export class BJJService {
                 .map(c => {
                     const attrs = c.title.split(':')[1].split('-');
                     return {
-                        color: attrs[0],
-                        stripes: attrs[2],
-                        date: c.start,
+                        color: (<any>BjjBelt)[attrs[0]],
+                        stripes: parseInt(attrs[2], 10),
+                        date: c.start.toISOString(true),
                         timeItTook: util.humanize(bjjBegin, c.start),
                         hoursItTook: classes.filter(c1 => c1.start < c.start).reduce(this.sum, 0)
                     };
