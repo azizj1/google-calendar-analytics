@@ -81,6 +81,11 @@ const config = {
                         options: { silent: true }
                     }
                 ]
+            },
+            {
+                test: /(\.html|unit\.js)$/,
+                include: /node_modules\/swagger-ui-express/,
+                use: 'raw-loader'
             }
         ]
     },
