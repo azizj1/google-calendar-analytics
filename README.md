@@ -1,5 +1,6 @@
 # Google Calendar Analytics
-Express.js RESTful API that uses [Google Calendar API](https://developers.google.com/calendar/) to inquire my private calendars. The endpoints of the API can be found on [the Swagger page](https://0jhkh4pn4b.execute-api.us-east-1.amazonaws.com/prod/docs).
+Express.js RESTful API that uses [Google Calendar API](https://developers.google.com/calendar/) to inquire my private calendars. The following endpoints are provided:
+* /v1/calendars/fitness/bjj
 
 ## Getting Started
 Being a node app, the app has a few prerequisites.
