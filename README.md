@@ -1,10 +1,8 @@
 # Google Calendar Analytics
-ExpressJS RESTful API that uses [Google Calendar API](https://developers.google.com/calendar/) to inquire my calendars and provide the following endpoints:
-
-* /calendars/fitness/bjj
+Express.js RESTful API that uses [Google Calendar API](https://developers.google.com/calendar/) to inquire my private calendars. The endpoints of the API can be found on [the Swagger page](https://0jhkh4pn4b.execute-api.us-east-1.amazonaws.com/prod/docs).
 
 ## Getting Started
-Being a node app, the app has a couple of prerequisites.
+Being a node app, the app has a few prerequisites.
 
 ### Prerequisites
 * Node v8.10+. The project is deployed to AWS Lambda envrionment with node 8.10, so babel polyfills up to that version. 

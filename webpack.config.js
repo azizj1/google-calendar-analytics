@@ -36,6 +36,9 @@ const STATS = {
 const config = {
     mode: DEBUG ? 'development' : 'production',
     target: 'node',
+    node: {
+        __dirname: true
+    },
     entry: DEBUG ?
         { 'local': './src/bin/www.ts' } :
         { 'lambda': './src/bin/lambda.ts' }

@@ -1,0 +1,221 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A RESTful API that provides aggegrate information on my private Google Calendars.",
+        "version": "1.0.0",
+        "title": "Google Calendar Analytics API",
+        "license": {
+            "name": "MIT",
+            "url": "https://choosealicense.com/licenses/mit/"
+        }
+    },
+    "basePath": "/v1",
+    "tags": [{
+            "name": "fitness",
+            "description": "Analytics on my fitness calendar"
+        },
+        {
+            "name": "family-friends",
+            "description": "Analytics on my family/friends calendar"
+        }
+    ],
+    "externalDocs": {
+        "description": "GitHub",
+        "url": "https://github.com/azizj1/google-calendar-analytics"
+    },
+    "paths": {
+        "/calendars/fitness/bjj": {
+            "get": {
+                "tags": [
+                    "fitness"
+                ],
+                "summary": "Get all BJJ-related stats",
+                "description": "",
+                "operationId": "getBjj",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/BjjStats"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "BjjStats": {
+            "type": "object",
+            "properties": {
+                "totalHours": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "totalWeeks": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "totalClasses": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "avgHrsPerWeek": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "avgClassesPerWeek": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "avgHourPerClass": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "trainingDuration": {
+                    "type": "string"
+                },
+                "minHours": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "maxHours": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "typeBreakdown": {
+                    "type": "object",
+                    "properties": {
+                        "noGiHours": {
+                            "type": "number",
+                            "format": "double"
+                        },
+                        "giHours": {
+                            "type": "number",
+                            "format": "double"
+                        }
+                    }
+                },
+                "timeBreakdown": {
+                    "type": "object",
+                    "properties": {
+                        "morningHours": {
+                            "type": "number",
+                            "format": "double"
+                        },
+                        "afternoonHours": {
+                            "type": "number",
+                            "format": "double"
+                        },
+                        "eveningHours": {
+                            "type": "number",
+                            "format": "double"
+                        }
+                    }
+                },
+                "promotions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BjjPromotion"
+                    }
+                },
+                "classes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BjjClass"
+                    }
+                }
+            }
+        },
+        "BjjPromotion": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "integer",
+                    "enum": [
+                        "White",
+                        "Blue",
+                        "Purple",
+                        "Brown",
+                        "Black"
+                    ]
+                },
+                "stripes": {
+                    "type": "number",
+                    "format": "int32"
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "timeItTook": {
+                    "type": "string"
+                },
+                "hoursItTook": {
+                    "type": "number",
+                    "format": "double"
+                }
+            }
+        },
+        "BjjClass": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "start": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "end": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "durationHours": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "isAllDay": {
+                    "type": "boolean"
+                },
+                "classTime": {
+                    "type": "integer",
+                    "enum": [
+                        "Morning",
+                        "Afternoon",
+                        "Evening",
+                        "Unknown"
+                    ]
+                },
+                "type": {
+                    "type": "integer",
+                    "enum": [
+                        "Gi",
+                        "NoGi",
+                        "Unknown"
+                    ]
+                },
+                "level": {
+                    "type": "integer",
+                    "enum": [
+                        "Fundamental",
+                        "AllLevels",
+                        "Advanced",
+                        "Unknown"
+                    ]
+                }
+            }
+        }
+    }
+}
