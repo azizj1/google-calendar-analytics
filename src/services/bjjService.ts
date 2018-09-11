@@ -48,10 +48,6 @@ export class BJJService {
         return classes.filter(c => c.classTime === BjjClassTime.Afternoon).reduce(this.sum, 0);
     }
 
-    totalFundamentalHours(classes: IBjjClass[]) {
-        return classes.filter(c => c.level === BjjClassLevel.Fundamental).reduce(this.sum, 0);
-    }
-
     totalAllLevelsHours(classes: IBjjClass[]) {
         return classes.filter(c => c.level === BjjClassLevel.AllLevels).reduce(this.sum, 0);
     }
