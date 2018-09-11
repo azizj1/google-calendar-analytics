@@ -2,7 +2,6 @@
 ExpressJS RESTful API that uses [Google Calendar API](https://developers.google.com/calendar/) to inquire my calendars and provide the following endpoints:
 
 * /calendars/fitness/bjj
-* /calendars/family-friends/sex
 
 ## Getting Started
 Being a node app, the app has a couple of prerequisites.

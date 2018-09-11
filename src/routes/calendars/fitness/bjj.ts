@@ -27,7 +27,7 @@ router.use('/', async (_, res: Response, __) => {
             promotions: bjjService.promotions(classes),
             avgHrsPerWeek: totalHours / totalWeeks,
             avgClassesPerWeek: classes.length / totalWeeks,
-            avgHourPerSession: totalHours / classes.length,
+            avgHourPerClass: totalHours / classes.length,
             trainingDuration: util.humanize(bjjBegin),
             minHours: util.minHour(classes),
             maxHours: util.maxHour(classes),
