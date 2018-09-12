@@ -57,3 +57,12 @@ export enum BjjBelt {
     Brown,
     Black
 }
+
+export interface IBjjPromotion {
+    color: BjjBelt;
+    stripes: number;
+    date: string;
+    timeItTook: string;
+    hoursItTook: number;
+    isNextPromotion?: boolean;
+}

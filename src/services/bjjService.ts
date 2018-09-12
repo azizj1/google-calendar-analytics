@@ -1,6 +1,7 @@
-import { IEvent, IBjjClass, BjjClassTime, BjjClassType, BjjClassLevel, BjjBelt } from '~/models';
+import { IEvent, IBjjClass, BjjClassTime, BjjClassType, BjjClassLevel, BjjBelt, IBjjPromotion } from '~/models';
 import util from '~/services/util';
 import { bjjBegin } from '~/api/calendarQueries';
+import * as moment from 'moment';
 
 export class BJJService {
     toBjjClass = (event: IEvent): IBjjClass => ({
@@ -60,19 +61,34 @@ export class BJJService {
         return classes.filter(c => c.type === BjjClassType.Gi).reduce(this.sum, 0);
     }
 
-    promotions(classes: IBjjClass[]) {
-        return classes
+    promotions(classes: IBjjClass[]): IBjjPromotion[] {
+        const promotions = classes
                 .filter(c => c.title.toLowerCase().indexOf('bjj promotion') >= 0)
-                .map(c => {
+                .map((c, i, arr) => {
                     const attrs = c.title.split(':')[1].split('-');
+                    const prev = arr[i - 1];
                     return {
                         color: (<any>BjjBelt)[attrs[0]],
                         stripes: parseInt(attrs[2], 10),
                         date: c.start.toISOString(true),
-                        timeItTook: util.humanize(bjjBegin, c.start),
-                        hoursItTook: classes.filter(c1 => c1.start < c.start).reduce(this.sum, 0)
+                        timeItTook: util.humanize(prev ? prev.start : bjjBegin, c.start),
+                        hoursItTook: classes
+                            .filter(c1 => c1.start < c.start && (!prev || c1.start >= prev.start))
+                            .reduce(this.sum, 0)
                     };
                 });
+        const last = promotions[promotions.length - 1];
+        const lastPromoDate = last ? moment.parseZone(last.date, moment.ISO_8601, true) : bjjBegin;
+        const today = moment().utcOffset(lastPromoDate.utcOffset());
+        const next: IBjjPromotion = {
+            color: !last ? BjjBelt.White : last.stripes === 4 ? last.color + 1 : last.color,
+            stripes: last ? (last.stripes + 1) % 5 : 1,
+            date: today.toISOString(true),
+            timeItTook: util.humanize(lastPromoDate, today),
+            hoursItTook: classes.filter(c1 => c1.start >= lastPromoDate && c1.start < today).reduce(this.sum, 0),
+            isNextPromotion: true
+        };
+        return promotions.concat(next);
     }
 }
 
