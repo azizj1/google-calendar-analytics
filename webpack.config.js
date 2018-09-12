@@ -34,11 +34,6 @@ const STATS = {
     warnings: true
 };
 
-const others = [
-    path.join(__dirname, 'node_modules/swagger-ui-express/indexTemplate.html'),
-    path.join(__dirname, 'node_modules/swagger-ui-express/swagger-ui-init.js')
-];
-
 const config = {
     mode: DEBUG ? 'development' : 'production',
     target: 'node',
