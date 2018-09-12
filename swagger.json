@@ -9,7 +9,7 @@
             "url": "https://choosealicense.com/licenses/mit/"
         }
     },
-    "basePath": "/v1",
+    "basePath": "/dev/v1",
     "tags": [{
             "name": "fitness",
             "description": "Analytics on my fitness calendar"

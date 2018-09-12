@@ -1,6 +1,7 @@
 const path = require('path');
 const CleanPlugin = require('clean-webpack-plugin');
 const ZipPlugin = require('zip-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const DEBUG = !process.argv.includes('-p');
 const BUILD_DIR = path.join(__dirname, 'build');
@@ -36,6 +37,9 @@ const STATS = {
 const config = {
     mode: DEBUG ? 'development' : 'production',
     target: 'node',
+    node: {
+        __dirname: false
+    },
     entry: DEBUG ?
         { 'local': './src/bin/www.ts' } :
         { 'lambda': './src/bin/lambda.ts' }
@@ -81,9 +85,15 @@ const config = {
             }
         ]
     },
-    plugins: DEBUG ? [] : [
-        new CleanPlugin([BUILD_DIR]),
-        new ZipPlugin({filename: 'lambda.zip', path: path.join(__dirname, 'terraform/modules/lambda')})
+    plugins: [
+        new CopyWebpackPlugin([
+            {from: 'node_modules/swagger-ui-express/*.{js,html}', to: BUILD_DIR, flatten: true, ignore: ['index.js']},
+            {from: 'node_modules/swagger-ui-dist/swagger*.{js,css}', to: BUILD_DIR, flatten: true}
+        ]),
+        ... DEBUG ? [] : [
+            new CleanPlugin([BUILD_DIR]),
+            new ZipPlugin({filename: 'lambda.zip', path: path.join(__dirname, 'terraform/modules/lambda')}),
+        ]
     ],
     cache: DEBUG,
     stats: STATS
