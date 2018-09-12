@@ -29,6 +29,12 @@ export class Utility {
         return `${pluralize(yearsDiff, 'year')}${pluralize(monthsDiff, 'month')}${pluralize(daysDiff, 'day')}`
                     .slice(0, -1);
     }
+
+    daysDiff(from: moment.Moment, to = moment()) {
+        from = from.clone();
+        const daysDiff = to.diff(from, 'days');
+        return `${daysDiff}day${daysDiff === 1 ? '' : 's'}`;
+    }
 }
 
 const util = new Utility();

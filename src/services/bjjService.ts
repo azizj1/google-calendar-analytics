@@ -71,7 +71,7 @@ export class BJJService {
                         color: (<any>BjjBelt)[attrs[0]],
                         stripes: parseInt(attrs[2], 10),
                         date: c.start.toISOString(true),
-                        timeItTook: util.humanize(prev ? prev.start : bjjBegin, c.start),
+                        timeItTook: util.daysDiff(prev ? prev.start : bjjBegin, c.start),
                         hoursItTook: classes
                             .filter(c1 => c1.start < c.start && (!prev || c1.start >= prev.start))
                             .reduce(this.sum, 0)
@@ -84,7 +84,7 @@ export class BJJService {
             color: !last ? BjjBelt.White : last.stripes === 4 ? last.color + 1 : last.color,
             stripes: last ? (last.stripes + 1) % 5 : 1,
             date: today.toISOString(true),
-            timeItTook: util.humanize(lastPromoDate, today),
+            timeItTook: util.daysDiff(lastPromoDate, today),
             hoursItTook: classes.filter(c1 => c1.start >= lastPromoDate && c1.start < today).reduce(this.sum, 0),
             isNextPromotion: true
         };
