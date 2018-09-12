@@ -2,8 +2,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as logger from 'morgan';
 import * as cors from 'cors';
-import * as swaggerUi from 'swagger-ui-express';
-import * as swaggerDoc from '~/../swagger.json';
+
 import chalk from 'chalk';
 import routes from './routes';
 
@@ -29,7 +28,6 @@ app.use(cors());
 app.use(logger(':datetime :method :url :status :response-time ms - :res[content-length] bytes'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use('/', routes);
 
 // catch 404 and forward to error handler
@@ -41,7 +39,7 @@ app.use((_, __, next: express.NextFunction) => {
 
 // error handlers development error handler will print stacktrace notice how
 // this middleware has four parameters
-if (app.get('env') === 'development') {
+if (app.get('env') === 'local') {
     app.use((err : any, _: express.Request, res : express.Response, __: any) => {
         console.log(err.message);
         res.status(err.status || 500);

@@ -1,12 +1,12 @@
-import { Router, Response } from 'express';
+import { Router, Response, NextFunction } from 'express';
 import * as moment from 'moment';
 import calendarApi from '~/api/calendarApi';
 import { bjjBegin } from '~/api/calendarQueries';
 import util from '~/services/util';
 import bjjService from '~/services/bjjService';
 
-const router = Router();
-router.use('/', async (_, res: Response, __) => {
+const routes = Router();
+routes.use('/', async (_, res: Response, next: NextFunction) => {
     try {
         const classes = await calendarApi.getAllBjjEvents();
         const totalHours = util.totalHours(classes);
@@ -37,8 +37,8 @@ router.use('/', async (_, res: Response, __) => {
         };
         res.json(response);
     } catch (err) {
-        res.status(500).end(`Error occurred: ${err}`);
+		next(err instanceof Error ? err : new Error(`Error occurred: ${JSON.stringify(err)}`));
     }
 });
 
-export default router;
+export default routes;

@@ -13,6 +13,13 @@ export interface IDataGoogleCalendarEvent {
     end: IDataEventTime;
 }
 
+export interface IHealthCheck {
+    numberOfCalendars: number;
+    numberOfCalendarsRespondedWithEvent: number;
+    startTimeUtc: string;
+    serverTimeUtc: string;
+}
+
 export interface IEvent {
     title: string;
     notes: string;

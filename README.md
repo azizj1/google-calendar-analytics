@@ -1,6 +1,5 @@
 # Google Calendar Analytics
-Express.js RESTful API that uses [Google Calendar API](https://developers.google.com/calendar/) to inquire my private calendars. The following endpoints are provided:
-* /v1/calendars/fitness/bjj
+Express.js RESTful API that uses [Google Calendar API](https://developers.google.com/calendar/) to inquire my private calendars. The endpoints of the API can be found on [the Swagger page](https://0jhkh4pn4b.execute-api.us-east-1.amazonaws.com/prod/docs/).
 
 ## Getting Started
 Being a node app, the app has a few prerequisites.
@@ -49,31 +48,23 @@ User `aws-cli` must have the ablity to
 
 If you're feeling lazy, attach policies `AmazonAPIGatewayAdministrator`, `IAMFullAccess`, and `AWSLambdaFullAccess` to the user. If you're concerned about security, don't add any policies and just run the deployments. Terraform will error, but it'll inform you what permission is needed to continue. Add that specific permission to the user, and run it again. Do this until Terraform succeeds.
 
-Next, run
-```
-yarn build
-```
-to do a production build of the app and have it copied over to the right destination.
-
 ### Dev Environment
-Navigate to `./terraform/` and run either
 ```
-./terraform_apply.sh dev
+yarn deploy
 ```
 on macOS, or
 ```
-terraform_apply.bat dev
+yarn deploy-win
 ```
 on Windows.
 
 ### Prod Environment
-Navigate to `./terraform/` and run either
 ```
-./terraform_apply.sh prod
+yarn deploy-prod
 ```
 on macOS, or
 ```
-terraform_apply.bat prod
+yarn deploy-prod-win
 ```
 on Windows.
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import sex from './sex';
 
-const router = Router();
-router.use('/sex', sex);
-export default router;
+const routes = Router();
+routes.use('/sex', sex);
+export default routes;

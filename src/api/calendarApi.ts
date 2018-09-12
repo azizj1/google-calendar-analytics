@@ -1,7 +1,7 @@
 // tslint:disable:no-var-requires
 import * as moment from 'moment';
 import { IDataGoogleCalendarEvent, IEvent, IDataEventTime } from '~/models';
-import { bjjQuery, sexQuery } from '~/api/calendarQueries';
+import { bjjQuery, sexQuery, singleEvent } from '~/api/calendarQueries';
 import bjjService from '~/services/bjjService';
 import * as calendarIds from '~/../calendars.json';
 import * as creds from '~/../credentials.json';
@@ -37,6 +37,13 @@ class CalendarApi {
         return data
                 .map(this.toEventModel)
                 .filter(e => e.title.toLowerCase().indexOf(title) >= 0);
+    }
+
+    async getEventFromAll() {
+        const ids = Object.keys(calendarIds).map(k => (<{[name: string]: string}>calendarIds)[k]);
+        return await Promise.all(
+            ids.map(id => this.calendarApi.Events.list(id, singleEvent) as IDataGoogleCalendarEvent[])
+        );
     }
 
     toEventModel = (e: IDataGoogleCalendarEvent): IEvent => {

@@ -6,8 +6,12 @@
   "scripts": {
     "start": "webpack --progress --colors && node ./build/local.js",
     "watch": "nodemon",
-    "build": "webpack -p --progress --colors",
-    "deploy": "npm run build && cd terraform && ./terraform_apply.bat dev && cd ../../..",
+    "build": "webpack --env dev",
+    "build-prod": "webpack --env prod",
+    "deploy": "npm run build && cd terraform && ./terraform_apply.sh dev && cd ../../..",
+    "deploy-win": "npm run build && cd terraform && ./terraform_apply.bat dev && cd ../../..",
+    "deploy-prod": "npm run build-prod && cd terraform && ./terraform_apply.sh prod && cd ../../..",
+    "deploy-prod-win": "npm run build-prod && cd terraform && ./terraform_apply.bat prod && cd ../../..",
     "store-secret": "aws s3 cp credentials.json s3://azizj1 --profile aws-cli",
     "get-secret": "aws s3 cp s3://azizj1/credentials.json . --profile aws-cli"
   },

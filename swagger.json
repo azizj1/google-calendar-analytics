@@ -9,8 +9,11 @@
             "url": "https://choosealicense.com/licenses/mit/"
         }
     },
-    "basePath": "/dev/v1",
+    "basePath": "/v1",
     "tags": [{
+            "name": "diagnostics",
+            "description": "Validate the API is up and running"
+        },{
             "name": "fitness",
             "description": "Analytics on my fitness calendar"
         },
@@ -47,9 +50,107 @@
                     }
                 }
             }
+        },
+        "/ping": {
+            "get": {
+                "tags": [
+                    "diagnostics"
+                ],
+                "summary": "Ping API",
+                "description": "",
+                "operationId": "ping",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/health-check": {
+            "get": {
+                "tags": [
+                    "diagnostics"
+                ],
+                "summary": "Verifies all calendars can be hit",
+                "description": "",
+                "operationId": "healthCheck",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/HealthCheck"
+                        }
+                    }
+                }
+            }
+        },
+        "/error-test": {
+            "get": {
+                "tags": [
+                    "diagnostics"
+                ],
+                "summary": "Verifies that errors are reporting correctly",
+                "description": "",
+                "operationId": "error",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "500": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "HealthCheck": {
+            "type": "object",
+            "properties": {
+                "startTimeUtc": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "serverTimeUtc": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "numberOfCalendars": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "numberOfCalendarsRespondedWithEvent": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
         "BjjStats": {
             "type": "object",
             "properties": {
@@ -159,6 +260,9 @@
                 "hoursItTook": {
                     "type": "number",
                     "format": "double"
+                },
+                "isNextPromotion": {
+                    "type": "boolean"
                 }
             }
         },

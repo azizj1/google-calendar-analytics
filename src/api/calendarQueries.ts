@@ -21,3 +21,7 @@ export const sexQuery = {
     fields: 'items(description,end,location,start,summary)',
     timeZone: 'America/Chicago'
 };
+
+export const singleEvent = {
+    maxResults: 1
+};
