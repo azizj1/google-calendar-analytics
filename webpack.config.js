@@ -18,7 +18,8 @@ const STATS = {
     children: false,
     errors: true,
     errorDetails: true,
-    warnings: true
+    warnings: true,
+    warningsFilter: /^(?!CriticalDependenciesWarning$)/
 };
 
 module.exports = function (env) {
