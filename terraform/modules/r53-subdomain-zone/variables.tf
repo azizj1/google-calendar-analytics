@@ -1,0 +1,2 @@
+variable "subdomain" {}
+variable "domain" {}

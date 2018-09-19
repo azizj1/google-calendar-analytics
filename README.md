@@ -49,7 +49,14 @@ User `aws-cli` must have the ablity to
 * Create Lambdas
 * Store/retrieve files from S3 (optional - for API secrets)
 
+**TODO**: If planning on having custom domains for the API, `aws-cli` must also be able to
+* AmazonRoute53FullAccess
+* AWSCertificateManagerFullAccess
+* CloudFrontFullAccess cloudfront:UpdateDistribution on '*' resources.
+
 If you're feeling lazy, attach policies `AmazonAPIGatewayAdministrator`, `IAMFullAccess`, and `AWSLambdaFullAccess` to the user. If you're concerned about security, don't add any policies and just run the deployments. Terraform will error, but it'll inform you what permission is needed to continue. Add that specific permission to the user, and run it again. Do this until Terraform succeeds.
+
+**TODO**: Discuss `terraform destroy`, and how long it can take.
 
 ### Dev Environment
 ```
