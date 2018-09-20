@@ -14,7 +14,7 @@ if [ -z "$CERT_ARN" ]
 then
     echo "Certificate not found, assuming custom domains are NOT being used"
     echo "Updating ~/gateway-stages.json..."
-    echo "{\"production\": \"prod\", \"development\": \"dev\"}" > gateway-stages.json
+    echo "{\"production\": \"/prod\", \"development\": \"/dev\"}" > gateway-stages.json
 else
     echo "Certificate found, assuming custom domains ARE being used"
     echo "Updating ~/gateway-stages.json..."

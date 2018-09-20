@@ -35,7 +35,6 @@ echo "Initializing state backend..."
 terraform init -input=false -backend-config="bucket=$BUCKET_NAME"
 
 echo "Applying full terraform manipulation"
-# terraform plan -var "domain_name=$DOMAIN_NAME"
 terraform apply -var "domain_name=$DOMAIN_NAME" -var "cert_arn=$CERT_ARN" -var "do_domain_setup=$DO_DOMAIN_SETUP" -input=false -auto-approve
 
 if [ ! -z "$CERT_ARN" ]

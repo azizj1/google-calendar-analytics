@@ -35,10 +35,10 @@ yarn start
 The API is deployed to AWS Lambda + API Gateway using Terraform.
 
 Two deployment options are supported:
-1. Without a custom domain and using the unique URL that API Gateway generates (e.g., https://0jhkh4pn4b.execute-api.us-east-1.amazonaws.com/prod/docs/)
+1. Without a custom domain and using the unique URL that API Gateway generates (e.g., https://oswh3xvy12.execute-api.us-east-1.amazonaws.com/prod/docs/)
 2. With a custom domain (e.g., https://api.azizj1.com/docs/)
 
-Each come with a dev environment (https://27shtszeu6.execute-api.us-east-1.amazonaws.com/dev/docs/ and https://devapi.azizj1.com/docs/).
+Each come with a dev environment (https://dr7dranbgi.execute-api.us-east-1.amazonaws.com/dev/docs/ and https://devapi.azizj1.com/docs/).
 
 The prerequisites will describe how you can use either, starting with what's common in both.
 
@@ -75,6 +75,7 @@ If you're feeling lazy, attach policies
 
 to the user. If you're concerned about security, don't add any policies and just run the deployments. Terraform will error, but it'll inform you what permission is needed to continue. Add that specific permission to the user, and run it again. Do this until Terraform succeeds.
 
+#### S3 Bucket
 Next, it's highly encouraged to have an S3 bucket for this project. This S3 bucket will store all the Terraform state files, and it can optionally store your `./credentials.json` once you get it ([below](#grant-read-access-to-private-google-calendars)). 
 
 If you would like to use an existing S3 bucket,
@@ -114,7 +115,7 @@ No additional steps are needed. Move onto deploying [dev environment](#dev-envir
 6. After everything above and lambda and api gateway are created, create a **Custom Domain Names** in API Gateway. Domain name being `api.azizj1.com`, ACM certificate being the certificate from #2, and a base path mapping from `/` to the API Gateway ARN + stage. 
 7. The step above creates a CloudFront distribution, which allows your API to be edge optimized. Back in Route 53, An A Route (IPv4 Address) record is created in `zone.api` as an alias that points to the CloudFront distribution.
 
-And that's it!
+And that's it! You can see the changes by logging into your [AWS Console](https://console.aws.amazon.com/console/home).
 
 ### Dev Environment
 ```
