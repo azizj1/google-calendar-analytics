@@ -1,6 +1,7 @@
 #!/bin/bash
 
-BUCKET_NAME=$(cat state_storage_s3_bucket_name.txt)
+BUCKET_NAME=$(cat s3_bucket_name.txt)
+echo "S3 bucket name $BUCKET_NAME obtained from s3_bucket_name.txt"
 cd ./custom-domain-setup/main-zone/
 
 echo "Getting modules..."

@@ -2,7 +2,7 @@
 Express.js RESTful API that uses [Google Calendar API](https://developers.google.com/calendar/) to inquire my private calendars.
 
 ## Swagger / Demo
-Production swagger can be found [here](https://0jhkh4pn4b.execute-api.us-east-1.amazonaws.com/prod/docs/). Dev environment swagger can be found [here](https://27shtszeu6.execute-api.us-east-1.amazonaws.com/dev/docs/). 
+Production swagger can be found [here](https://api.azizj1.com/docs/). Dev environment swagger can be found [here](https://devapi.azizj1.com/docs/). 
 
 ## Getting Started
 Being a node app, the app has a few prerequisites.
@@ -34,7 +34,16 @@ yarn start
 ## Deployment
 The API is deployed to AWS Lambda + API Gateway using Terraform.
 
+Two deployment options are supported:
+1. Without a custom domain and using the unique URL that API Gateway generates (e.g., https://0jhkh4pn4b.execute-api.us-east-1.amazonaws.com/prod/docs/)
+2. With a custom domain (e.g., https://api.azizj1.com/docs/)
+
+Each come with a dev environment (https://27shtszeu6.execute-api.us-east-1.amazonaws.com/dev/docs/ and https://devapi.azizj1.com/docs/).
+
+The prerequisites will describe how you can use either, starting with what's common in both.
+
 ### Prerequisites
+
 Download the following and have it available in `PATH` or `/usr/local/bin/`:
 * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/installing.html)
 * [Terraform 0.11+](https://www.terraform.io/)
@@ -47,16 +56,65 @@ User `aws-cli` must have the ablity to
 * Create IAM roles
 * Create API Gateways
 * Create Lambdas
-* Store/retrieve files from S3 (optional - for API secrets)
+* Store/retrieve files from S3 (for terraform state files and Google Calendar API secrets)
+* If you'd like Terraform to create a bucket, `aws-cli` must also be able to create S3 buckets.
 
-**TODO**: If planning on having custom domains for the API, `aws-cli` must also be able to
+If you plan on having custom domains for the API, `aws-cli` must also be able to
+* Create/get Route53 zones and records
+* Create certificates in AWS Certificate Manager
+* Update CloudFront distributions
+
+If you're feeling lazy, attach policies
+* AmazonAPIGatewayAdministrator
+* IAMFullAccess
+* AWSLambdaFullAccess
+* AmazonS3FullAccess
+* CloudFrontFullAccess
 * AmazonRoute53FullAccess
 * AWSCertificateManagerFullAccess
-* CloudFrontFullAccess cloudfront:UpdateDistribution on '*' resources.
 
-If you're feeling lazy, attach policies `AmazonAPIGatewayAdministrator`, `IAMFullAccess`, and `AWSLambdaFullAccess` to the user. If you're concerned about security, don't add any policies and just run the deployments. Terraform will error, but it'll inform you what permission is needed to continue. Add that specific permission to the user, and run it again. Do this until Terraform succeeds.
+to the user. If you're concerned about security, don't add any policies and just run the deployments. Terraform will error, but it'll inform you what permission is needed to continue. Add that specific permission to the user, and run it again. Do this until Terraform succeeds.
 
-**TODO**: Discuss `terraform destroy`, and how long it can take.
+Next, it's highly encouraged to have an S3 bucket for this project. This S3 bucket will store all the Terraform state files, and it can optionally store your `./credentials.json` once you get it ([below](#grant-read-access-to-private-google-calendars)). 
+
+If you would like to use an existing S3 bucket,
+1. Update `./terraform/s3_bucket_name.txt` with the bucket name
+2. You're done.
+
+If you would like to create a new S3 bucket for this and use that one,
+1. Update `./terraform/s3_bucket_name.txt` with new bucket name
+2. `yarn create-s3-bucket`
+3. You're done.
+
+If you would like to **not** use an S3 bucket, comment out `terraform { ... }` block from all `config.tf` files
+  - `./terraform/custom-domain-setup/certificate/config.tf`
+  - `./terraform/custom-domain-setup/main-zone/config.tf`
+  - `./terraform/environments/dev/config.tf`
+  - `./terraform/environments/prod/config.tf`
+
+#### Deploying Without a Custon Domain
+No additional steps are needed. Move onto deploying [dev environment](#dev-environment).
+
+#### Deploying With a Custon Domain
+1. Get a custom domain, one that you have DNS access to. E.g., [Google Domains](https://domains.google.com/), [GoDaddy](https://www.godaddy.com/), etc. 
+2. Run `yarn custom-domain-setup`. It'll create four custom name servers.
+3. Navigate into your domain's DNS settings and find "custom name servers." Update those name servers to the one printed in console from previous command. E.g., in Google Domains, custom name servers are at
+
+    ![Example of custom name servers](./docs/custom-nameservers.png)
+4. Press `enter` to continue, which will now create a certificate using AWS Certificate Manager and validate it with your domain. 
+    - *Note*: This can take several minutes to do.
+5. That's it. Move onto deploying [dev environment](#dev-environment).
+
+#### What additional resources are deployed for a custom domain.
+1. A Route 53 Zone (let's call it `zone.main`) that manages your entire domain's DNS (e.g., `*.azizj1.com.`). This access is granted by changing the name servers on your domain registration service (Google Domains, GoDaddy, etc.) in step 3 above.
+2. A certificate for `*.azizj1.com.` is requested using AWS Certificate Manager. To validate that you actually own the domain you say you do, AWS Certificate Manager requires a unique CNAME to be added to yor domain's DNS. Since `zone.main` manages that, we add a CNAME record to `zone.main`.
+3. Wait for the certificate to be validated.
+4. Create another Route 53 Zone (call it `zone.api`) that manages all requests to the `api` subdomain (e.g., `api.azizj1.com.` or `devapi.azizj1.com.`). 
+5. To tell `zone.main` to route all `api` subdomain calls to `zone.api`, we create NS records in `zone.main` equal to `zone.api`'s NS values.
+6. After everything above and lambda and api gateway are created, create a **Custom Domain Names** in API Gateway. Domain name being `api.azizj1.com`, ACM certificate being the certificate from #2, and a base path mapping from `/` to the API Gateway ARN + stage. 
+7. The step above creates a CloudFront distribution, which allows your API to be edge optimized. Back in Route 53, An A Route (IPv4 Address) record is created in `zone.api` as an alias that points to the CloudFront distribution.
+
+And that's it!
 
 ### Dev Environment
 ```
@@ -77,6 +135,9 @@ on macOS, or
 yarn deploy-prod-win
 ```
 on Windows.
+
+## Teardown
+TODO.
 
 ## Grant Read Access to Private Google Calendars
 ### Get Key JSON File
