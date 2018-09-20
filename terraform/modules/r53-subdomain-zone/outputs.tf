@@ -3,5 +3,5 @@ output "fqdn" {
 }
 
 output "zone_id" {
-    value = "${aws_route53_zone.api.zone_id}"
+    value = "${element(concat(aws_route53_zone.api.*.zone_id, list("")), 0)}"
 }

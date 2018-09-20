@@ -11,19 +11,16 @@ module "api" {
 	lambda_arn = "${module.lambda.arn}"
 }
 
-module "cert" {
-	source = "../cert"
-	domain = "${var.domain}"
-}
-
 module "subdomain_zone" {
 	source = "../r53-subdomain-zone"
+	enabled = "${var.do_domain_setup}"
 	domain = "${var.domain}"
 	subdomain = "${var.environment == "production" ? "api" : "devapi"}"
 }
 
 module "custdom_domain" {
 	source = "../api-gateway-custom-domain"
+	enabled = "${var.do_domain_setup}"
 	cert_arn = "${var.cert_arn}"
 	fqdn = "${module.subdomain_zone.fqdn}"
 	subdomain_zone_id = "${module.subdomain_zone.zone_id}"

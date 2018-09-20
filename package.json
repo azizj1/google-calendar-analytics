@@ -13,7 +13,8 @@
     "deploy-prod": "npm run build-prod && cd terraform && ./terraform_apply.sh prod && cd ../../..",
     "deploy-prod-win": "npm run build-prod && cd terraform && ./terraform_apply.bat prod && cd ../../..",
     "store-secret": "aws s3 cp credentials.json s3://azizj1 --profile aws-cli",
-    "get-secret": "aws s3 cp s3://azizj1/credentials.json . --profile aws-cli"
+    "get-secret": "aws s3 cp s3://azizj1/credentials.json . --profile aws-cli",
+    "custom-domain-setup": "cd ./terraform && ./custom_domain_setup.sh && cd ../"
   },
   "repository": {
     "type": "git",
