@@ -15,7 +15,9 @@
     "store-secret": "aws s3 cp credentials.json s3://azizj1 --profile aws-cli",
     "get-secret": "aws s3 cp s3://azizj1/credentials.json . --profile aws-cli",
     "custom-domain-setup": "cd ./terraform && ./custom_domain_setup.sh && cd ../",
-    "create-s3-bucket": "cd ./terraform && ./create_s3_bucket.sh && cd ../"
+    "custom-domain-setup-win": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./terraform/custom_domain_setup.ps1",
+    "create-s3-bucket": "cd ./terraform && ./create_s3_bucket.sh && cd ../",
+    "create-s3-bucket-win": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./terraform/create_s3_bucket.ps1"
   },
   "repository": {
     "type": "git",
