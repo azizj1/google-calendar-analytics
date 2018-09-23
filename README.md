@@ -96,15 +96,19 @@ If you would like to **not** use an S3 bucket, comment out `terraform { ... }` b
 #### Deploying Without a Custon Domain
 No additional steps are needed. Move onto deploying [dev environment](#dev-environment).
 
-#### Deploying With a Custon Domain
+#### Deploying with a Custon Domain
 1. Get a custom domain, one that you have DNS access to. E.g., [Google Domains](https://domains.google.com/), [GoDaddy](https://www.godaddy.com/), etc. 
-2. Run `yarn custom-domain-setup`. It'll create four custom name servers.
+2. Run `yarn custom-domain-setup` (or `yarn custom-domain-setup-win` for Windows). It'll create four custom name servers.
 3. Navigate into your domain's DNS settings and find "custom name servers." Update those name servers to the one printed in console from previous command. E.g., in Google Domains, custom name servers are at
 
     ![Example of custom name servers](./docs/custom-nameservers.png)
 4. Press `enter` to continue, which will now create a certificate using AWS Certificate Manager and validate it with your domain. 
     - *Note*: This can take several minutes to do.
-5. That's it. Move onto deploying [dev environment](#dev-environment).
+
+That's it. Move onto deploying [dev environment](#dev-environment).
+
+### Deploying with a Custom Domain After Deploying Without
+If you've already deployed without a custom domain, the instructions to deploy with a custom domains **do not** change, regardless of you deploying without a custom domain beforehand or not. 
 
 #### What additional resources are deployed for a custom domain.
 1. A Route 53 Zone (let's call it `zone.main`) that manages your entire domain's DNS (e.g., `*.azizj1.com.`). This access is granted by changing the name servers on your domain registration service (Google Domains, GoDaddy, etc.) in step 3 above.
@@ -127,6 +131,8 @@ yarn deploy-win
 ```
 on Windows.
 
+**Note**: If you're deploying with a custom domain for the first time, note that it can take several minutes for your API to become available.
+
 ### Prod Environment
 ```
 yarn deploy-prod
@@ -137,8 +143,45 @@ yarn deploy-prod-win
 ```
 on Windows.
 
+**Note**: If you're deploying with a custom domain for the first time, note that it can take several minutes for your API to become available.
+
 ## Teardown
-TODO.
+Thanks to Terraform, tearing down your deployments is built-in.
+
+### Dev Environment Teardown
+```
+yarn teardown
+```
+on macOS, or
+```
+yarn teardown-win
+```
+on Windows.
+
+### Prod Environment Teardown
+```
+yarn teardown-prod
+```
+on macOS, or
+```
+yarn teardown-prod-win
+```
+on Windows.
+
+### Custom Domain Teardown
+Before you can tear down your certificate and main AWS Route53 Zone, you must
+1. Tear down both dev and prod.
+2. Wait about 30mins for certificate to declared *not in use*.
+
+When ready, run
+```
+yarn custom-domain-teardown
+```
+on macOS, or
+```
+yarn custom-domain-teardown-win
+```
+on Windows.
 
 ## Grant Read Access to Private Google Calendars
 ### Get Key JSON File

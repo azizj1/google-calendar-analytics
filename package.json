@@ -17,7 +17,13 @@
     "custom-domain-setup": "cd ./terraform && ./custom_domain_setup.sh && cd ../",
     "custom-domain-setup-win": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./terraform/custom_domain_setup.ps1",
     "create-s3-bucket": "cd ./terraform && ./create_s3_bucket.sh && cd ../",
-    "create-s3-bucket-win": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./terraform/create_s3_bucket.ps1"
+    "create-s3-bucket-win": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./terraform/create_s3_bucket.ps1",
+    "teardown": "cd terraform && ./terraform_teardown.sh dev && cd ../../..",
+    "teardown-win": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./terraform/terraform_teardown.ps1 dev",
+    "teardown-prod": "cd terraform && ./terraform_teardown.sh prod && cd ../../..",
+    "teardown-prod-win": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./terraform/terraform_teardown.ps1 prod",
+    "custom-domain-teardown": "cd terraform && ./custom_domain_teardown.sh && cd ../../..",
+    "custom-domain-teardown-win": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./terraform/custom_domain_teardown.ps1"
   },
   "repository": {
     "type": "git",
