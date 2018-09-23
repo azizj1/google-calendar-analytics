@@ -1,3 +1,3 @@
-output "base_url" {
-	value = "${module.platform.base_url}"
+output "swagger_url" {
+	value = "${module.platform.swagger_url}"
 }

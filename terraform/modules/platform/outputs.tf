@@ -1,3 +1,3 @@
-output "base_url" {
-	value = "${module.api.base_url}"
+output "swagger_url" {
+    value = "${var.do_domain_setup ? "https://${module.subdomain_zone.fqdn}/docs/" : "${module.api.base_url}/docs/"}"
 }

@@ -5,7 +5,7 @@ import * as gatewayStages from '~/../gateway-stages.json';
 
 const swaggerBasePathUpdate = (swaggerDoc: any, env: string | undefined) => {
     if (env === 'development' || env === 'production')
-        swaggerDoc.basePath = '/' + (<any>gatewayStages)[env] + swaggerDoc.basePath;
+        swaggerDoc.basePath = (<any>gatewayStages)[env] + swaggerDoc.basePath;
     return swaggerDoc;
 };
 
