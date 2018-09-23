@@ -78,11 +78,11 @@ to the user. If you're concerned about security, don't add any policies and just
 #### S3 Bucket
 Next, it's highly encouraged to have an S3 bucket for this project. This S3 bucket will store all the Terraform state files, and it can optionally store your `./credentials.json` once you get it ([below](#grant-read-access-to-private-google-calendars)). 
 
-If you would like to use an existing S3 bucket,
+If you would like to use an **existing** S3 bucket,
 1. Update `./terraform/s3_bucket_name.txt` with the bucket name
 2. You're done.
 
-If you would like to create a new S3 bucket for this and use that one,
+If you would like to create a **new** S3 bucket for this and use that one,
 1. Update `./terraform/s3_bucket_name.txt` with new bucket name
 2. `yarn create-s3-bucket`
 3. You're done.
@@ -112,7 +112,7 @@ If you've already deployed without a custom domain, the instructions to deploy w
 
 Just follow the instructions [above](#deploying-with-a-custon-domain).
 
-#### What additional resources are deployed for a custom domain.
+#### Additional resources that are deployed for a custom domain
 1. A Route 53 Zone (let's call it `zone.main`) that manages your entire domain's DNS (e.g., `*.azizj1.com.`). This access is granted by changing the name servers on your domain registration service (Google Domains, GoDaddy, etc.) in step 3 above.
 2. A certificate for `*.azizj1.com.` is requested using AWS Certificate Manager. To validate that you actually own the domain you say you do, AWS Certificate Manager requires a unique CNAME to be added to yor domain's DNS. Since `zone.main` manages that, we add a CNAME record to `zone.main`.
 3. Wait for the certificate to be validated.
