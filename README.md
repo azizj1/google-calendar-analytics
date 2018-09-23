@@ -172,8 +172,8 @@ on Windows.
 
 ### Custom Domain Teardown
 Before you can tear down your certificate and main AWS Route53 Zone, you must
-1. Tear down both dev and prod.
-2. Wait about 30mins for certificate to declared *not in use*.
+1. Tear down both dev and prod environments.
+2. Wait about 30mins for certificate to be declared *not in use*.
 
 When ready, run
 ```
