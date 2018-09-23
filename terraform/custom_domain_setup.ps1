@@ -20,7 +20,7 @@ $DomainName = terraform output domain_name
 Write-Output "Created AWS Route53 Zone for '$DomainName' with the name servers printed above."
 Write-Output "Manually change your domain registration service's name servers to the ones above, so certificates can be requested by AWS."
 Write-Output ""
-Write-Host -NoNewLine 'Press any key to continue...'
+Write-Host -NoNewLine 'When done, press any key to continue...'
 $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 
 # Create certificate
