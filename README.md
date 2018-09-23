@@ -65,13 +65,13 @@ If you plan on having custom domains for the API, `aws-cli` must also be able to
 * Update CloudFront distributions
 
 If you're feeling lazy, attach policies
-* AmazonAPIGatewayAdministrator
-* IAMFullAccess
-* AWSLambdaFullAccess
-* AmazonS3FullAccess
-* CloudFrontFullAccess
-* AmazonRoute53FullAccess
-* AWSCertificateManagerFullAccess
+* `AmazonAPIGatewayAdministrator`
+* `IAMFullAccess`
+* `AWSLambdaFullAccess`
+* `AmazonS3FullAccess`
+* `CloudFrontFullAccess`
+* `AmazonRoute53FullAccess`
+* `AWSCertificateManagerFullAccess`
 
 to the user. If you're concerned about security, don't add any policies and just run the deployments. Terraform will error, but it'll inform you what permission is needed to continue. Add that specific permission to the user, and run it again. Do this until Terraform succeeds.
 
@@ -107,8 +107,10 @@ No additional steps are needed. Move onto deploying [dev environment](#dev-envir
 
 That's it. Move onto deploying [dev environment](#dev-environment).
 
-### Deploying with a Custom Domain After Deploying Without
+#### Deploying with a Custom Domain After Deploying Without
 If you've already deployed without a custom domain, the instructions to deploy with a custom domains **do not** change, regardless of you deploying without a custom domain beforehand or not. 
+
+Just follow the instructions [above](#deploying-with-a-custon-domain).
 
 #### What additional resources are deployed for a custom domain.
 1. A Route 53 Zone (let's call it `zone.main`) that manages your entire domain's DNS (e.g., `*.azizj1.com.`). This access is granted by changing the name servers on your domain registration service (Google Domains, GoDaddy, etc.) in step 3 above.
