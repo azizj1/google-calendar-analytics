@@ -275,6 +275,12 @@
                 "notes": {
                     "type": "string"
                 },
+                "notesTldr": {
+                    "type": "string"
+                },
+                "taughtBy": {
+                    "type": "string"
+                },
                 "location": {
                     "type": "string"
                 },

@@ -8,7 +8,10 @@ export class BJJService {
         ...event,
         classTime: this.classTime(event),
         type: this.classType(event),
-        level: this.classLevel(event)
+        level: this.classLevel(event),
+        taughtBy: this.taughtBy(event),
+        notesTldr: this.notesTldr(event),
+        notes: this.notes(event)
     })
 
     classTime(event: IEvent): BjjClassTime {
@@ -33,6 +36,43 @@ export class BJJService {
         if (event.title.toLowerCase().indexOf('advance') >= 0) return BjjClassLevel.Advanced;
         if (event.title.toLowerCase().indexOf('open mat') >= 0) return BjjClassLevel.OpenMat;
         return BjjClassLevel.AllLevels;
+    }
+
+    taughtBy(event: IEvent) {
+        if (this.isEmpty(event.notes))
+            return '';
+        if (event.isAllDay)
+            return '';
+        return (event.notes.split('\n').find(n => n.trim() !== '') || '').trim();
+    }
+
+    notesTldr(event: IEvent) {
+        if (this.isEmpty(event.notes))
+            return '';
+        if (event.isAllDay)
+            return event.notes;
+        const teacherAndNotes = event.notes.split('\n');
+        // remove any TLDR header from first note, and if there is no TLDR header, remove any markdown characters.
+        return (
+                teacherAndNotes
+                    .slice(teacherAndNotes.findIndex(n => n.trim() !== '') + 1) // remove teacher
+                    .find(n => n.trim() !== '') || '' // find tldr note, or first note if there is
+                ).replace(/^([^\w]+|tldr:\s*)/i, ''); // clean it up
+    }
+
+    notes(event: IEvent) {
+        if (this.isEmpty(event.notes))
+            return '';
+        if (event.isAllDay)
+            return event.notes;
+        const teacherAndNotes = event.notes.split('\n');
+        const notes = teacherAndNotes.slice(teacherAndNotes.findIndex(n => n.trim() !== '') + 1);
+        let cleanedNotes = notes.slice(notes.findIndex(n => n.trim() !== ''));
+        if (cleanedNotes.length === 0)
+            return '';
+        if (cleanedNotes[0].toLowerCase().indexOf('tldr:') >= 0)
+            cleanedNotes = cleanedNotes.slice(1);
+        return cleanedNotes.join('\n').trim();
     }
 
     totalMorningHours(classes: IBjjClass[]) {
@@ -90,6 +130,8 @@ export class BJJService {
         };
         return promotions.concat(next);
     }
+
+    isEmpty = (str: string) => str == null || str.trim() === '';
 }
 
 const bjjService = new BJJService();

@@ -55,6 +55,8 @@ export interface IBjjClass extends IEvent {
     classTime: BjjClassTime;
     type: BjjClassType;
     level: BjjClassLevel;
+    taughtBy: string;
+    notesTldr: string;
 }
 
 export enum BjjBelt {

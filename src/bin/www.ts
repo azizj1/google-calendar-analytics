@@ -4,7 +4,7 @@ import * as http from 'http';
 
 const debugConsole = debug('google-calendar-analytics:server');
 const port = normalizePort(process.env.PORT || '3000');
-console.log('Listening on port ' + port);
+console.log(`Listening on port ${port}. Swagger: http://localhost:${port}/docs/`);
 app.set('port', port);
 
 const server = http.createServer(app);

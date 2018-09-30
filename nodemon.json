@@ -1,5 +1,5 @@
 {
-    "ignore": ["node_modules"],
-    "watch": ["src"],
-    "exec": "npm start"
+    "ignore": ["node_modules", "build", "terraform"],
+    "exec": "npm start",
+    "ext": "js,json,ts,tsx"
 }
