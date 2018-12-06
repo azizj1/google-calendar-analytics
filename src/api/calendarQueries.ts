@@ -8,7 +8,8 @@ export const bjjQuery = {
     singleEvents: true,
     orderBy: 'startTime',
     fields: 'items(description,end,location,start,summary)',
-    timeZone: 'America/Chicago'
+    timeZone: 'America/Chicago',
+    maxResults: 2500
 };
 
 export const sexBegin = moment(new Date(2017, 3, 0));
