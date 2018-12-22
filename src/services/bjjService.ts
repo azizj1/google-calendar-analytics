@@ -103,7 +103,7 @@ export class BJJService {
 
     promotions(classes: IBjjClass[]): IBjjPromotion[] {
         const promotions = classes
-                .filter(c => c.title.toLowerCase().indexOf('bjj promotion') >= 0)
+                .filter(c => c.title.toLowerCase().indexOf('bjj promotion:') >= 0)
                 .map((c, i, arr) => {
                     const attrs = c.title.split(':')[1].split('-');
                     const prev = arr[i - 1];
