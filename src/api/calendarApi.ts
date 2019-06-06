@@ -22,10 +22,12 @@ class CalendarApi {
         this.calendarApi = new CalendarAPI(config);
     }
 
+    async getAllBjjEventsRaw() {
+        return await this.calendarApi.Events.list(config.calendarId.fitness, bjjQuery) as IDataGoogleCalendarEvent[];
+    }
+
     async getAllBjjEvents() {
-        const data =
-            await this.calendarApi.Events.list(config.calendarId.fitness, bjjQuery) as IDataGoogleCalendarEvent[];
-        return data
+        return (await this.getAllBjjEventsRaw())
             .map(this.toEventModel)
             .map(bjjService.toBjjClass);
     }

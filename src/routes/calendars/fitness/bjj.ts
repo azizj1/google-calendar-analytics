@@ -6,7 +6,7 @@ import util from '~/services/util';
 import bjjService from '~/services/bjjService';
 
 const routes = Router();
-routes.use('/', async (_, res: Response, next: NextFunction) => {
+routes.use('/bjj', async (_, res: Response, next: NextFunction) => {
     try {
         const classes = await calendarApi.getAllBjjEvents();
         const totalHours = util.totalHours(classes);
@@ -38,6 +38,14 @@ routes.use('/', async (_, res: Response, next: NextFunction) => {
         res.json(response);
     } catch (err) {
 		next(err instanceof Error ? err : new Error(`Error occurred: ${JSON.stringify(err)}`));
+    }
+});
+
+routes.use('/bjj.raw', async (_, res: Response, next: NextFunction) => {
+    try {
+        res.json(await calendarApi.getAllBjjEventsRaw());
+    } catch (err) {
+        next(err instanceof Error ? err : new Error(`Error occurred: ${JSON.stringify(err)}`));
     }
 });
 

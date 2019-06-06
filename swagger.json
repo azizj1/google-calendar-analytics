@@ -51,6 +51,33 @@
                 }
             }
         },
+        "/calendars/fitness/bjj.raw": {
+            "get": {
+                "tags": [
+                    "fitness"
+                ],
+                "summary": "Get all BJJ events, without any aggregate data",
+                "description": "",
+                "operationId": "getBjjRaw",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BjjClassRaw"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/ping": {
             "get": {
                 "tags": [
@@ -230,6 +257,43 @@
                     "items": {
                         "$ref": "#/definitions/BjjClass"
                     }
+                }
+            }
+        },
+        "BjjClassRaw": {
+            "type": "object",
+            "properties": {
+                "created": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "start": {
+                    "$ref": "#/definitions/BjjClassDateTimeRaw"
+                },
+                "end": {
+                    "$ref": "#/definitions/BjjClassDateTimeRaw"
+                }
+            }
+        },
+        "BjjClassDateTimeRaw": {
+            "type": "object",
+            "properties": {
+                "dateTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date"
                 }
             }
         },

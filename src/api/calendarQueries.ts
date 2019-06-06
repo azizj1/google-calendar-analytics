@@ -7,7 +7,7 @@ export const bjjQuery = {
     q: 'BJJ',
     singleEvents: true,
     orderBy: 'startTime',
-    fields: 'items(description,end,location,start,summary)',
+    fields: 'items(description,end,location,start,summary,created)',
     timeZone: 'America/Chicago',
     maxResults: 2500
 };
@@ -19,7 +19,7 @@ export const sexQuery = {
     q: 'Ahlam time',
     singleEvents: true,
     orderBy: 'startTime',
-    fields: 'items(description,end,location,start,summary)',
+    fields: 'items(description,end,location,start,summary,created)',
     timeZone: 'America/Chicago'
 };
 
