@@ -31,7 +31,8 @@ module.exports = function (env) {
         plugins: [
             '@babel/plugin-proposal-class-properties',
             '@babel/plugin-proposal-object-rest-spread', 
-            '@babel/transform-runtime'
+            '@babel/transform-runtime',
+            'lodash'
         ],
         cacheDirectory: DEBUG 
     };

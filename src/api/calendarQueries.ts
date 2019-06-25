@@ -7,7 +7,19 @@ export const bjjQuery = {
     q: 'BJJ',
     singleEvents: true,
     orderBy: 'startTime',
-    fields: 'items(description,end,location,start,summary,created)',
+    fields: 'items(id, description,end,location,start,summary,created)',
+    timeZone: 'America/Chicago',
+    maxResults: 2500
+};
+
+export const wrestlingBegin = moment(new Date(2019, 5, 16));
+export const wrestlingQuery = {
+    timeMin: wrestlingBegin.toISOString(),
+    timeMax: moment().toISOString(),
+    q: 'wrestling',
+    singleEvents: true,
+    orderBy: 'startTime',
+    fields: 'items(id, description,end,location,start,summary,created)',
     timeZone: 'America/Chicago',
     maxResults: 2500
 };
@@ -19,7 +31,7 @@ export const sexQuery = {
     q: 'Ahlam time',
     singleEvents: true,
     orderBy: 'startTime',
-    fields: 'items(description,end,location,start,summary,created)',
+    fields: 'items(id, description,end,location,start,summary,created)',
     timeZone: 'America/Chicago'
 };
 

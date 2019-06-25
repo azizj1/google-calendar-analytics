@@ -1,10 +1,11 @@
 // tslint:disable:no-var-requires
 import * as moment from 'moment';
-import { IDataGoogleCalendarEvent, IEvent, IDataEventTime } from '~/models';
-import { bjjQuery, sexQuery, singleEvent } from '~/api/calendarQueries';
+import { IDataGoogleCalendarEvent, IEvent, IDataEventTime, IBjjClass } from '~/models';
+import { bjjQuery, sexQuery, singleEvent, wrestlingQuery } from '~/api/calendarQueries';
 import bjjService from '~/services/bjjService';
 import * as calendarIds from '~/../calendars.json';
 import * as creds from '~/../credentials.json';
+import { uniqBy, orderBy } from 'lodash';
 
 const CalendarAPI = require('node-google-calendar');
 const { private_key, client_email } = creds;
@@ -23,13 +24,18 @@ class CalendarApi {
     }
 
     async getAllBjjEventsRaw() {
-        return await this.calendarApi.Events.list(config.calendarId.fitness, bjjQuery) as IDataGoogleCalendarEvent[];
+        const bjj = this.calendarApi.Events.list(config.calendarId.fitness, bjjQuery) as IDataGoogleCalendarEvent[];
+        const wrestling =
+            this.calendarApi.Events.list(config.calendarId.fitness, wrestlingQuery) as IDataGoogleCalendarEvent[];
+        const nestedAll = await Promise.all([bjj, wrestling]);
+        return uniqBy(nestedAll[0].concat(nestedAll[1]), e => e.id);
     }
 
     async getAllBjjEvents() {
-        return (await this.getAllBjjEventsRaw())
+        const events = (await this.getAllBjjEventsRaw())
             .map(this.toEventModel)
             .map(bjjService.toBjjClass);
+        return orderBy(events, (e: IBjjClass) => e.start.unix(), 'asc');
     }
 
     async getAllSexEvents() {

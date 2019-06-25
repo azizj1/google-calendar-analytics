@@ -6,6 +6,7 @@ export interface IDataEventTime {
 }
 
 export interface IDataGoogleCalendarEvent {
+    id: string;
     summary: string;
     description: string;
     created: string;
