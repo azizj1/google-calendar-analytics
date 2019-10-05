@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { IEvent, Calendar } from '~/models';
 
 const routes = Router();
-routes.use('/summary', async (_, res: Response, next: NextFunction) => {
+routes.use('/', async (_, res: Response, next: NextFunction) => {
     const beginDate = moment().startOf('month').subtract(3, 'months');
     try {
         const summary = (await calendarApi.getEventsFromAllCalendars(beginDate)).map(correctDurationForWork);
