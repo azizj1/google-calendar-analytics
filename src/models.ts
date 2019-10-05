@@ -30,6 +30,16 @@ export interface IEvent {
     end: moment.Moment;
     durationHours: number;
     isAllDay: boolean;
+    calendar: Calendar;
+}
+
+export enum Calendar {
+    Personal      = 0,
+    Fitness       = 1,
+    FamilyFriends = 2,
+    Consulting    = 3,
+    Work          = 4,
+    Goals         = 5
 }
 
 export enum BjjClassTime {

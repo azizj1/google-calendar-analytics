@@ -38,3 +38,22 @@ export const sexQuery = {
 export const singleEvent = {
     maxResults: 1
 };
+
+export const consultingBegin = moment(new Date(2017, 0, 0));
+export const consultingQuery = {
+    timeMin: consultingBegin.toISOString(),
+    timeMax: moment().toISOString(),
+    singleEvents: true,
+    orderBy: 'startTime',
+    fields: 'items(id, description,end,location,start,summary,created)',
+    timeZone: 'America/Chicago'
+};
+
+export const summaryQuery = {
+    timeMax: moment().toISOString(),
+    singleEvents: true,
+    orderBy: 'startTime',
+    fields: 'items(id, description,end,location,start,summary,created)',
+    timeZone: 'America/Chicago',
+    maxResults: 2500
+};
