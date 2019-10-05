@@ -1,11 +1,11 @@
 // tslint:disable:no-var-requires
 import * as moment from 'moment';
-import { IDataGoogleCalendarEvent, IEvent, IDataEventTime, IBjjClass } from '~/models';
-import { bjjQuery, sexQuery, singleEvent, wrestlingQuery } from '~/api/calendarQueries';
+import { IDataGoogleCalendarEvent, IEvent, IDataEventTime, IBjjClass, Calendar } from '~/models';
+import { bjjQuery, sexQuery, singleEvent, wrestlingQuery, consultingQuery, summaryQuery } from '~/api/calendarQueries';
 import bjjService from '~/services/bjjService';
 import * as calendarIds from '~/../calendars.json';
 import * as creds from '~/../credentials.json';
-import { uniqBy, orderBy } from 'lodash';
+import { uniqBy, orderBy, flatMap } from 'lodash';
 
 const CalendarAPI = require('node-google-calendar');
 const { private_key, client_email } = creds;
@@ -33,7 +33,7 @@ class CalendarApi {
 
     async getAllBjjEvents() {
         const events = (await this.getAllBjjEventsRaw())
-            .map(this.toEventModel)
+            .map(this.toEventModel(Calendar.Fitness))
             .map(bjjService.toBjjClass);
         return orderBy(events, (e: IBjjClass) => e.start.unix(), 'asc');
     }
@@ -43,8 +43,15 @@ class CalendarApi {
         const data =
             await this.calendarApi.Events.list(config.calendarId.familyFriends, sexQuery) as IDataGoogleCalendarEvent[];
         return data
-                .map(this.toEventModel)
+                .map(this.toEventModel(Calendar.FamilyFriends))
                 .filter(e => e.title.toLowerCase().indexOf(title) >= 0);
+    }
+
+    async searchConsultingEvents(query: string) {
+        const params = { ...consultingQuery, q: query };
+        const data =
+            await this.calendarApi.Events.list(config.calendarId.consulting, params) as IDataGoogleCalendarEvent[];
+        return data.map(this.toEventModel(Calendar.Consulting));
     }
 
     async getEventFromAll() {
@@ -54,7 +61,17 @@ class CalendarApi {
         );
     }
 
-    toEventModel = (e: IDataGoogleCalendarEvent): IEvent => {
+    async getEventsFromAllCalendars(since: moment.Moment) {
+        const query = { ...summaryQuery, timeMin: since.toISOString( )};
+        const ids = Object.keys(calendarIds).map(k => (<{[name: string]: string}>calendarIds)[k]);
+
+        const promises = ids.map(c => this.calendarApi.Events.list(c, query) as IDataGoogleCalendarEvent[]);
+        return flatMap((await Promise.all(promises)), (d, i) => d.map(this.toEventModel(i)))
+            .filter(e => !e.isAllDay)
+            .sort((a, b) => a.start.toDate().getTime() - b.start.toDate().getTime());
+    }
+
+    toEventModel = (calendar: Calendar) => (e: IDataGoogleCalendarEvent): IEvent => {
         const start = this.toMoment(e.start);
         const end = this.toMoment(e.end);
         const isAllDay = e.start.dateTime == null;
@@ -62,6 +79,7 @@ class CalendarApi {
             start,
             end,
             isAllDay,
+            calendar,
             title: e.summary,
             notes: e.description,
             location: e.location,
