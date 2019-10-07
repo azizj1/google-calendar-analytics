@@ -5,10 +5,19 @@ import { IEvent, Calendar } from '~/models';
 
 const routes = Router();
 routes.use('/', async (_, res: Response, next: NextFunction) => {
-    const beginDate = moment().startOf('month').subtract(3, 'months');
+    const beginDate = moment().utc().startOf('month').subtract(3, 'months').subtract(1, 'day');
     try {
-        const summary = (await calendarApi.getEventsFromAllCalendars(beginDate)).map(correctDurationForWork);
-        const breakdown = getByCategory(summary).map(getBreakdown);
+        const events = await calendarApi.getEventsFromAllCalendars(beginDate);
+        const threeMonthsAgoInSameTimeZone = moment()
+            .utcOffset(events[0].start.utcOffset())
+            .startOf('month')
+            .subtract(3, 'months');
+        const relevantEvents = events
+            .filter(e => e.start >= threeMonthsAgoInSameTimeZone)
+            .map(correctDurationForWork);
+        const breakdown = getByCategory(relevantEvents)
+            .map(getBreakdown)
+            .sort((a, b) => a.calendar.localeCompare(b.calendar));
 
         res.json(breakdown);
     } catch (err) {
@@ -101,10 +110,10 @@ const sum = <T>(items: T[], value?: (item: T) => number) =>
     items.reduce((total, curr) => total + (value == null ? (curr as unknown as number) : value(curr)), 0);
 
 const byPeriod = (period: 'isoWeek' | 'month') => (events: IEvent[]) => Object.entries(
-    groupBy<IEvent, string>(e => e.start.startOf(period).toISOString())(events))
+    groupBy<IEvent, string>(e => e.start.clone().endOf(period).format())(events))
     .map(([period, events]) => ({period, events}));
 
 const toWeeklyAverage = ({period, totalHours}: {period: string, totalHours: number}) =>
-    ({period, avgHrsPerWeek: totalHours / moment(period).daysInMonth() * 7});
+    ({period, avgHrsPerWeek: totalHours / moment.parseZone(period).daysInMonth() * 7});
 
 export default routes;
