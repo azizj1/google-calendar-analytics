@@ -87,3 +87,40 @@ export interface IBjjPromotion {
     hoursItTook: number;
     isNextPromotion?: boolean;
 }
+
+export interface IWeeklyPoint {
+    period: string;
+    totalHours: number;
+}
+
+export interface IMonthlyPoint {
+    period: string;
+    avgHrsPerWeek: number;
+}
+
+export interface IQuarterlyPoint {
+    from: string;
+    to: string;
+    totalHours: number;
+    weeklyAvg: number;
+}
+
+export interface ISummaryResponse {
+    subcategory: SummarySubcategory;
+    tree: string[];
+    weekly: IWeeklyPoint[];
+    monthly: IMonthlyPoint[];
+    quarterly: IQuarterlyPoint;
+}
+
+export type SummarySubcategory =
+    'BJJ' |
+    'Wrestling' |
+    'Workout' |
+    'Planning' |
+    'Learning' |
+    'DaddyDuties' |
+    'Miscellaneous' |
+    'FamilyFriends' |
+    'Consulting' |
+    'Employment';
