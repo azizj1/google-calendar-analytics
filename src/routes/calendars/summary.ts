@@ -92,15 +92,26 @@ const addHoursSlept = ({subcategory, events}: {subcategory: SummarySubcategory, 
         .reduce((newEvents, curr, index, array) => {
             const wentToBed = curr;
             const wokeUp = array[index + 1];
-            if (wentToBed.title.toLowerCase() !== 'get ready for bed' || wokeUp == null)
+            if (
+                wentToBed.title.toLowerCase() !== 'get ready for bed' ||
+                wokeUp == null ||
+                wokeUp.title.toLowerCase() !== 'wake up')
                 return newEvents; // i.e., we don't care about current event
+
+            // from when the 'get ready to bed' event ends to when 'wake up' starts.
+            const duration = wokeUp.start.diff(wentToBed.end, 'hours', true);
+            // the day you wake up is NOT the day you slept. You slept the day before. Then make it 12am because
+            // there's no better time to set the time to. The end event will be 12am + durationHours
+            // Using wentToBed.end as the 'start' is problematic because you may go to bed at 12am or later, which
+            // counts as the following day Using wokeUp.subtract(1) solves that problem.
+            const eventStart = wokeUp.start.clone().subtract(1, 'day').startOf('day');
             newEvents.push({
                 title: 'Sleeping',
                 notes: '',
                 location: '',
-                start: wentToBed.end,
-                end: wokeUp.start,
-                durationHours: wokeUp.start.diff(wentToBed.end, 'hours', true),
+                start: eventStart,
+                end: eventStart.clone().add(duration, 'hours'),
+                durationHours: duration,
                 isAllDay: false,
                 calendar: Calendar.Personal
             });
