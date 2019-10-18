@@ -88,6 +88,11 @@ export interface IBjjPromotion {
     isNextPromotion?: boolean;
 }
 
+export interface IDailyPoint {
+    period: string;
+    hours: number;
+}
+
 export interface IWeeklyPoint {
     period: string;
     totalHours: number;
@@ -105,12 +110,43 @@ export interface IQuarterlyPoint {
     weeklyAvg: number;
 }
 
-export interface ISummaryResponse {
+export interface ISleepEvent {
+    wentToBedAt: string;
+    wokeUpAt: string;
+    duration: number;
+}
+
+export interface ISummaryItem {
     subcategory: SummarySubcategory;
     tree: string[];
     weekly: IWeeklyPoint[];
     monthly: IMonthlyPoint[];
     quarterly: IQuarterlyPoint;
+}
+
+export interface ISleepSummary {
+    subcategory: SummarySubcategory;
+    tree: string[];
+    weekly: {
+        period: string;
+        dailyAvg: number;
+        totalHours: number;
+    }[];
+    monthly: {
+        period: string;
+        dailyAvg: number;
+    }[];
+    quarterly: {
+        from: string;
+        to: string;
+        dailyAvg: number;
+    };
+    last20Events: ISleepEvent[];
+}
+
+export interface ISummaryResponse {
+    items: ISummaryItem[];
+    sleep: ISleepSummary;
 }
 
 export type SummarySubcategory =
@@ -123,4 +159,5 @@ export type SummarySubcategory =
     'Miscellaneous' |
     'FamilyFriends' |
     'Consulting' |
-    'Employment';
+    'Employment' |
+    'Sleep';

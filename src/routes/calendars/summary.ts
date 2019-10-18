@@ -1,7 +1,7 @@
 import { Router, Response, NextFunction } from 'express';
 import calendarApi from '~/api/calendarApi';
 import * as moment from 'moment';
-import { IEvent, Calendar, ISummaryResponse, SummarySubcategory } from '~/models';
+import { IEvent, Calendar, ISummaryResponse, SummarySubcategory, ISummaryItem, ISleepSummary } from '~/models';
 
 const routes = Router();
 routes.use('/', async (_, res: Response, next: NextFunction) => {
@@ -12,14 +12,15 @@ routes.use('/', async (_, res: Response, next: NextFunction) => {
         const threeMonthsAgoInSameTimeZone = getThreeMonthsAgoInSameTimeZone(utcOffset);
         const relevantEvents = events
             .filter(e => e.start >= threeMonthsAgoInSameTimeZone)
-            .map(correctDurationForWork)
-            .concat();
-        const breakdown = getBySubcategory(relevantEvents)
+            .map(correctDurationForWork);
+        const summaryResponse = getBySubcategory(relevantEvents)
             .map(addStubEventsForPadding(utcOffset))
+            .map(addHoursSlept)
             .map(getBreakdown)
-            .sort((a, b) => a.subcategory.localeCompare(b.subcategory));
+            .sort((a, b) => a.subcategory.localeCompare(b.subcategory))
+            .reduce(toSummaryResponse, {} as Partial<ISummaryResponse>);
 
-        res.json(breakdown);
+        res.json(summaryResponse);
     } catch (err) {
         next(err instanceof Error ? err : new Error(`Error occurred: ${JSON.stringify(err)}`));
     }
@@ -57,9 +58,10 @@ const isFullDayWorkEvent = (event: IEvent) =>
     event.title.toLowerCase() === 'direct supply' ||
     event.title.toLowerCase() === 'direct supply wfh';
 
+const STUB_TITLE = 'STUB EVENT';
 const addStubEventsForPadding =
     (utcOffset: number) =>
-    ({events, subcategory}: {subcategory: SummarySubcategory, events: IEvent[]}) => {
+    ({subcategory, events}: {subcategory: SummarySubcategory, events: IEvent[]}) => {
     const beginDate = getBeginDate();
     const threeMonthsAgoInSameTimeZone = getThreeMonthsAgoInSameTimeZone(utcOffset);
     const stubEvents = Array(Math.round(moment().diff(getBeginDate(), 'weeks', true)) + 1)
@@ -67,8 +69,8 @@ const addStubEventsForPadding =
         .map((_, index) => beginDate.clone().add(index, 'weeks').utcOffset(utcOffset).endOf('isoWeek'))
         .filter(m => m >= threeMonthsAgoInSameTimeZone)
         .map(m => ({
-            title: 'STUB EVENT',
-            notes: 'STUB EVENT',
+            title: STUB_TITLE,
+            notes: STUB_TITLE,
             location: '',
             start: m,
             end: m,
@@ -82,9 +84,35 @@ const addStubEventsForPadding =
     };
 };
 
-const getBreakdown = ({events, subcategory}: {subcategory: SummarySubcategory, events: IEvent[]}): ISummaryResponse => {
+const addHoursSlept = ({subcategory, events}: {subcategory: SummarySubcategory, events: IEvent[]}) => {
+    if (!isSleepSubcategory(subcategory))
+        return { subcategory, events };
+    const sleepEvents = events
+        .filter(isSleepEvent)
+        .reduce((newEvents, curr, index, array) => {
+            const wentToBed = curr;
+            const wokeUp = array[index + 1];
+            if (wentToBed.title.toLowerCase() !== 'get ready for bed' || wokeUp == null)
+                return newEvents; // i.e., we don't care about current event
+            newEvents.push({
+                title: 'Sleeping',
+                notes: '',
+                location: '',
+                start: wentToBed.end,
+                end: wokeUp.start,
+                durationHours: wokeUp.start.diff(wentToBed.end, 'hours', true),
+                isAllDay: false,
+                calendar: Calendar.Personal
+            });
+            return newEvents;
+        }, [] as IEvent[]);
+    return { subcategory, events: sleepEvents };
+};
+
+const getBreakdown = (params: {subcategory: SummarySubcategory, events: IEvent[]}): ISummaryItem | ISleepSummary => {
+    const { subcategory, events } = params;
     const totalHours = sum(events, e => e.durationHours);
-    return {
+    const breakdown = {
         subcategory,
         tree: subcategoryToTree[subcategory],
         weekly: byPeriod('isoWeek')(events).map(toTotalHours),
@@ -96,6 +124,34 @@ const getBreakdown = ({events, subcategory}: {subcategory: SummarySubcategory, e
             weeklyAvg: totalHours / (moment().diff(events[0].start, 'days', true)) * 7
         }
     };
+    if (isSleepSubcategory(subcategory))
+        return {
+            subcategory: breakdown.subcategory,
+            tree: breakdown.tree,
+            weekly: breakdown.weekly.map(w => ({...w, dailyAvg: w.totalHours / 7})),
+            monthly: breakdown.monthly.map(m => ({period: m.period, dailyAvg: m.avgHrsPerWeek / 7})),
+            quarterly: {
+                to: breakdown.quarterly.to,
+                from: breakdown.quarterly.from,
+                dailyAvg: breakdown.quarterly.weeklyAvg / 7
+            },
+            last20Events: events.slice(-20).map(e => ({
+                wentToBedAt: e.start.format(),
+                wokeUpAt: e.end.format(),
+                duration: e.durationHours
+            }))
+        };
+    return breakdown;
+};
+
+const toSummaryResponse = (response: Partial<ISummaryResponse>, item: ISummaryItem | ISleepSummary) => {
+    if (isSleepSummary(item))
+        response.sleep = item;
+    else if (response.items != null)
+        response.items.push(item);
+    else
+        response.items = [item];
+    return response;
 };
 
 const subcategoryToTree: {[subcategory in SummarySubcategory]: string[] } = {
@@ -108,7 +164,8 @@ const subcategoryToTree: {[subcategory in SummarySubcategory]: string[] } = {
     'Planning': ['Growth', 'Planning'],
     'FamilyFriends': ['Leisure', 'FamilyFriends'],
     'DaddyDuties': ['Leisure', 'DaddyDuties'],
-    'Miscellaneous': ['Miscellaneous']
+    'Miscellaneous': ['Miscellaneous'],
+    'Sleep': ['Miscellaneous', 'Sleep']
 };
 
 const toTotalHours = ({period, events}: {period: string, events: IEvent[]}) =>
@@ -156,6 +213,8 @@ const getSubcategory = (e: IEvent): SummarySubcategory => {
         case Calendar.Personal: {
             if (title.indexOf('take care') >= 0 && title.indexOf('noor') >= 0)
                 return 'DaddyDuties';
+            if (isSleepEvent(e))
+                return 'Sleep';
             return 'Miscellaneous';
         }
         case Calendar.Work:
@@ -166,6 +225,13 @@ const getSubcategory = (e: IEvent): SummarySubcategory => {
             return 'FamilyFriends';
     }
 };
+
+const isSleepEvent = (e: IEvent) =>
+    e.title.toLowerCase() === 'wake up' || e.title.toLowerCase() === 'get ready for bed';
+
+const isSleepSubcategory = (subcategory: string) => subcategory === 'Sleep';
+const isSleepSummary = (item: ISummaryItem | ISleepSummary): item is ISleepSummary =>
+    isSleepSubcategory(item.subcategory) && (<ISleepSummary>item).last20Events != null;
 
 const toWeeklyAverage = ({period, totalHours}: {period: string, totalHours: number}) =>
     ({period, avgHrsPerWeek: totalHours / moment.parseZone(period).daysInMonth() * 7});
