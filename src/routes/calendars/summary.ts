@@ -8,11 +8,13 @@ routes.use('/', async (_, res: Response, next: NextFunction) => {
     const beginDate = getBeginDate();
     try {
         const events = await calendarApi.getEventsFromAllCalendars(beginDate);
-        const utcOffset = events[0].start.utcOffset();
+        const utcOffset = events[events.length - 1].start.utcOffset();
         const threeMonthsAgoInSameTimeZone = getThreeMonthsAgoInSameTimeZone(utcOffset);
+
         const relevantEvents = events
             .filter(e => e.start >= threeMonthsAgoInSameTimeZone)
-            .map(correctDurationForWork);
+            .map(correctDurationForWork)
+            .map(fixTimezone(utcOffset)); // change all events to same timezone
         const summaryResponse = getBySubcategory(relevantEvents)
             .map(addStubEventsForPadding(utcOffset))
             .map(addHoursSlept)
@@ -51,6 +53,12 @@ const correctDurationForWork = (event: IEvent, index: number, events: IEvent[]) 
             events[currIndex].end.diff(events[currIndex].start, 'hours', true));
     }
 
+    return event;
+};
+
+const fixTimezone = (toTimezone: number) => (event: IEvent) => {
+    event.start.utcOffset(toTimezone);
+    event.end.utcOffset(toTimezone);
     return event;
 };
 
@@ -127,7 +135,10 @@ const getBreakdown = (params: {subcategory: SummarySubcategory, events: IEvent[]
         subcategory,
         tree: subcategoryToTree[subcategory],
         weekly: byPeriod('isoWeek')(events).map(toTotalHours),
-        monthly: byPeriod('month')(events).map(toTotalHours).map(toWeeklyAverage),
+        monthly: byPeriod('month')(events)
+            .map(toTotalHours)
+            .map(toWeeklyAverage)
+            .filter(removeLaterMonths),
         quarterly: {
             from: events[0].start.format('MMMM Do, YYYY'),
             to: events[events.length - 1].end.format('MMMM Do, YYYY'),
@@ -163,6 +174,11 @@ const toSummaryResponse = (response: Partial<ISummaryResponse>, item: ISummaryIt
     else
         response.items = [item];
     return response;
+};
+
+const removeLaterMonths = ({period}: {period: string}) => {
+    const momentPeriod = moment.parseZone(period, moment.ISO_8601);
+    return momentPeriod.month() <= moment().utcOffset(momentPeriod.utcOffset()).month();
 };
 
 const subcategoryToTree: {[subcategory in SummarySubcategory]: string[] } = {
@@ -244,7 +260,15 @@ const isSleepSubcategory = (subcategory: string) => subcategory === 'Sleep';
 const isSleepSummary = (item: ISummaryItem | ISleepSummary): item is ISleepSummary =>
     isSleepSubcategory(item.subcategory) && (<ISleepSummary>item).last20Events != null;
 
-const toWeeklyAverage = ({period, totalHours}: {period: string, totalHours: number}) =>
-    ({period, avgHrsPerWeek: totalHours / moment.parseZone(period).daysInMonth() * 7});
+const toWeeklyAverage = ({period, totalHours}: {period: string, totalHours: number}) => {
+    const periodMoment = moment.parseZone(period, moment.ISO_8601);
+    // for current month, get number of days that have passed thus far.
+    // for previous monts, get the number of days in that month (28, 30, 31)
+    const daysInMonth = periodMoment.isSameOrAfter(moment(), 'days')
+        ? moment().utcOffset(periodMoment.utcOffset()).date()
+        : periodMoment.daysInMonth();
+    return ({period, avgHrsPerWeek: totalHours / daysInMonth * 7});
+
+};
 
 export default routes;
