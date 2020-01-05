@@ -138,7 +138,7 @@ const getBreakdown = (params: {subcategory: SummarySubcategory, events: IEvent[]
         monthly: byPeriod('month')(events)
             .map(toTotalHours)
             .map(toWeeklyAverage)
-            .filter(removeLaterMonths),
+            .filter(isCurrentOrPastMonth),
         quarterly: {
             from: events[0].start.format('MMMM Do, YYYY'),
             to: events[events.length - 1].end.format('MMMM Do, YYYY'),
@@ -176,9 +176,11 @@ const toSummaryResponse = (response: Partial<ISummaryResponse>, item: ISummaryIt
     return response;
 };
 
-const removeLaterMonths = ({period}: {period: string}) => {
+// we don't want to include data for months that haven't happeened yet, so filter out months in the future.
+const isCurrentOrPastMonth = ({period}: {period: string}) => {
     const momentPeriod = moment.parseZone(period, moment.ISO_8601);
-    return momentPeriod.month() <= moment().utcOffset(momentPeriod.utcOffset()).month();
+    const today = moment().utcOffset(momentPeriod.utcOffset());
+    return momentPeriod.month() <= today.month() || momentPeriod.year() < today.year();
 };
 
 const subcategoryToTree: {[subcategory in SummarySubcategory]: string[] } = {
