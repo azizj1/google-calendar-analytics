@@ -55,7 +55,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/BjjStats"
+                            "$ref": "#/definitions/Summary"
                         }
                     }
                 }
@@ -516,6 +516,180 @@
                     "type": "boolean"
                 }
             }
+        },
+        "Summary": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/SubcategorySummary"
+                    }
+                },
+                "sleep": {
+                    "$ref": "#/definitions/SleepSummary"
+                }
+            }
+        },
+        "SubcategorySummary": {
+            "type": "object",
+            "properties": {
+                "subcategory": {
+                    "$ref": "#/definitions/Subcategory"
+                },
+                "tree": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "weekly": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "period": {
+                                "type": "string"
+                            },
+                            "totalHours": {
+                                "type": "number",
+                                "format": "double"
+                            }
+                        }
+                    }
+                },
+                "monthly": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "period": {
+                                "type": "string"
+                            },
+                            "avgHrsPerWeek": {
+                                "type": "number",
+                                "format": "double"
+                            }
+                        }
+                    }
+                },
+                "quarterly": {
+                    "type": "object",
+                    "properties": {
+                        "from": {
+                            "type": "string"
+                        },
+                        "to": {
+                            "type": "string"
+                        },
+                        "totalHours": {
+                            "type": "number",
+                            "format": "double"
+                        },
+                        "weeklyAvg": {
+                            "type": "number",
+                            "format": "double"
+                        }
+                    }
+                }
+            }
+        },
+        "SleepSummary": {
+            "type": "object",
+            "properties": {
+                "subcategory": {
+                    "type": "integer",
+                    "enum": ["Sleep"]
+                },
+                "tree": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "weekly": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "period": {
+                                "type": "string"
+                            },
+                            "totalHours": {
+                                "type": "number",
+                                "format": "double"
+                            },
+                            "dailyAvg": {
+                                "type": "number",
+                                "format": "double"
+                            }
+                        }
+                    }
+                },
+                "monthly": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "period": {
+                                "type": "string"
+                            },
+                            "dailyAvg": {
+                                "type": "number",
+                                "format": "double"
+                            }
+                        }
+                    }
+                },
+                "quarterly": {
+                    "type": "object",
+                    "properties": {
+                        "from": {
+                            "type": "string"
+                        },
+                        "to": {
+                            "type": "string"
+                        },
+                        "dailyAvg": {
+                            "type": "number",
+                            "format": "double"
+                        }
+                    }
+                },
+                "last20Events": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "wentToBedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "wokeUpAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "duration": {
+                                "type": "number",
+                                "format": "double"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "Subcategory": {
+            "type": "integer",
+            "enum": [
+                "Learning",
+                "Miscellaneous",
+                "FamilyFriends",
+                "Consulting",
+                "Employment",
+                "BJJ",
+                "Workout",
+                "Planning"
+            ]
         }
     }
 }
