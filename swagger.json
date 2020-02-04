@@ -20,9 +20,6 @@
             "name": "fitness",
             "description": "Analytics on my fitness calendar"
         },{
-            "name": "family-friends",
-            "description": "Analytics on my family/friends calendar"
-        },{
             "name": "consulting",
             "description": "Analytics on my consulting calendar"
         }
