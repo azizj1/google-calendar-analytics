@@ -20,6 +20,7 @@ yarn
 Confirm you have `./credentials.json` (see [accessing private calendars](#grant-read-access-to-private-google-calendars)), whether it's downloading it from [Google Cloud Platform](https://console.cloud.google.com) or accessing it from your secrets S3 bucket by doing 
 ```
 yarn get-secret
+yarn get-auth-secret
 ```
 
 While developing, kick off watcher with hot-reload
