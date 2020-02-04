@@ -1,7 +1,7 @@
 // tslint:disable:no-var-requires
 import * as moment from 'moment';
 import { IDataGoogleCalendarEvent, IEvent, IDataEventTime, IBjjClass, Calendar } from '~/models';
-import { bjjQuery, sexQuery, singleEvent, wrestlingQuery, consultingQuery, summaryQuery } from '~/api/calendarQueries';
+import { bjjQuery, singleEvent, wrestlingQuery, consultingQuery, summaryQuery } from '~/api/calendarQueries';
 import bjjService from '~/services/bjjService';
 import * as calendarIds from '~/../calendars.json';
 import * as creds from '~/../credentials.json';
