@@ -46,6 +46,14 @@
                 "produces": [
                     "application/json"
                 ],
+                "parameters": [{
+                    "in": "query",
+                    "name": "accessKey",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -129,6 +137,13 @@
                         "type": "string"
                     },
                     "description": "Query to search by"
+                }, {
+                    "in": "query",
+                    "name": "accessKey",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
                 }],
                 "responses": {
                     "200": {
