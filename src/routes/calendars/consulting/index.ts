@@ -1,9 +1,10 @@
 import { Router, Response, NextFunction } from 'express';
 import calendarApi from '~/api/calendarApi';
 import util from '~/services/util';
-
+import auth from '../auth';
 
 const routes = Router();
+routes.use('/', auth);
 routes.use('/', async (req, res: Response, next: NextFunction) => {
     const q = req && req.query && req.query.q;
     if (q == null || q.trim() === '')

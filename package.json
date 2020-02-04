@@ -14,6 +14,8 @@
     "deploy-prod-win": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./update_gateway_stages.ps1 && npm run build-prod && @powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./terraform/terraform_apply.ps1 prod",
     "store-secret": "aws s3 cp credentials.json s3://azizj1 --profile aws-cli",
     "get-secret": "aws s3 cp s3://azizj1/credentials.json . --profile aws-cli",
+    "store-auth-secret": "aws s3 cp auth.json s3://azizj1 --profile aws-cli",
+    "get-auth-secret": "aws s3 cp s3://azizj1/auth.json . --profile aws-cli",
     "custom-domain-setup": "cd ./terraform && ./custom_domain_setup.sh && cd ../",
     "custom-domain-setup-win": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./terraform/custom_domain_setup.ps1",
     "create-s3-bucket": "cd ./terraform && ./create_s3_bucket.sh && cd ../",

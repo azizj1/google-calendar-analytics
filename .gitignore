@@ -4,3 +4,4 @@ build
 *.zip
 yarn-error.log
 credentials.json
+auth.json

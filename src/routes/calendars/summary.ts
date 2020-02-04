@@ -2,8 +2,10 @@ import { Router, Response, NextFunction } from 'express';
 import calendarApi from '~/api/calendarApi';
 import * as moment from 'moment';
 import { IEvent, Calendar, ISummaryResponse, SummarySubcategory, ISummaryItem, ISleepSummary } from '~/models';
+import auth from './auth';
 
 const routes = Router();
+routes.use('/', auth);
 routes.use('/', async (_, res: Response, next: NextFunction) => {
     const beginDate = getBeginDate();
     try {
