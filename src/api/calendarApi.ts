@@ -38,15 +38,6 @@ class CalendarApi {
         return orderBy(events, (e: IBjjClass) => e.start.unix(), 'asc');
     }
 
-    async getAllSexEvents() {
-        const title = 'ahlam time';
-        const data =
-            await this.calendarApi.Events.list(config.calendarId.familyFriends, sexQuery) as IDataGoogleCalendarEvent[];
-        return data
-                .map(this.toEventModel(Calendar.FamilyFriends))
-                .filter(e => e.title.toLowerCase().indexOf(title) >= 0);
-    }
-
     async searchConsultingEvents(query: string) {
         const params = { ...consultingQuery, q: query };
         const data =
