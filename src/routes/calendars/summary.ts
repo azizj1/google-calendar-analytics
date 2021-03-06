@@ -65,8 +65,8 @@ const fixTimezone = (toTimezone: number) => (event: IEvent) => {
 };
 
 const isFullDayWorkEvent = (event: IEvent) =>
-    event.title.toLowerCase() === 'direct supply' ||
-    event.title.toLowerCase() === 'direct supply wfh';
+    event.title.toLowerCase() === 'google' ||
+    event.title.toLowerCase() === 'google wfh';
 
 const STUB_TITLE = 'STUB EVENT';
 const addStubEventsForPadding =
