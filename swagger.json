@@ -22,6 +22,9 @@
         },{
             "name": "consulting",
             "description": "Analytics on my consulting calendar"
+        },{
+            "name": "retro",
+            "description": "Endpoints to support retro reports"
         }
     ],
     "externalDocs": {
@@ -231,6 +234,35 @@
                     }
                 }
             }
+        },
+        "/retro/commands/renderHtml": {
+          "post": {
+            "tags": [
+                "retro"
+            ],
+            "summary": "Converts a set of retro entries to html",
+            "description": "",
+            "operationId": "toHtmlCommand",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "successful operation",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "html": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
     },
     "definitions": {

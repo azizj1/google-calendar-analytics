@@ -161,3 +161,19 @@ export type SummarySubcategory =
     'Consulting' |
     'Employment' |
     'Sleep';
+
+
+export interface IRetroEntry {
+  date: string;
+  isWorkday: boolean;
+  workedTowardGoals: boolean;
+  accomplishedLevel: number;
+  feelLevel: number;
+  didWell: string;
+  needsImprovement: string;
+  gratefulFor: string;
+}
+
+export interface IRetroSummary {
+  entries: IRetroEntry[];
+}
