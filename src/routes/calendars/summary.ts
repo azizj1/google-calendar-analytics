@@ -196,7 +196,8 @@ const subcategoryToTree: {[subcategory in SummarySubcategory]: string[] } = {
     'FamilyFriends': ['Leisure', 'FamilyFriends'],
     'DaddyDuties': ['Leisure', 'DaddyDuties'],
     'Miscellaneous': ['Miscellaneous'],
-    'Sleep': ['Miscellaneous', 'Sleep']
+    'Sleep': ['Miscellaneous', 'Sleep'],
+    'TimeWasted': ['Miscellaneous', 'TimeWasted'],
 };
 
 const toTotalHours = ({period, events}: {period: string, events: IEvent[]}) =>
@@ -254,6 +255,8 @@ const getSubcategory = (e: IEvent): SummarySubcategory => {
             return 'Consulting';
         case Calendar.FamilyFriends:
             return 'FamilyFriends';
+        case Calendar.TimeWasted:
+            return 'TimeWasted';
     }
 };
 
