@@ -39,7 +39,8 @@ export enum Calendar {
     FamilyFriends = 2,
     Consulting    = 3,
     Work          = 4,
-    Goals         = 5
+    Goals         = 5,
+    TimeWasted    = 6,
 }
 
 export enum BjjClassTime {
@@ -160,8 +161,8 @@ export type SummarySubcategory =
     'FamilyFriends' |
     'Consulting' |
     'Employment' |
-    'Sleep';
-
+    'Sleep' |
+    'TimeWasted';
 
 export interface IRetroEntry {
   date: string;

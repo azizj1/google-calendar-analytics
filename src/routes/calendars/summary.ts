@@ -83,8 +83,8 @@ const fixTimezone = (toTimezone: number) => (event: IEvent) => {
 };
 
 const isFullDayWorkEvent = (event: IEvent) =>
-    event.title.toLowerCase() === 'direct supply' ||
-    event.title.toLowerCase() === 'direct supply wfh';
+    event.title.toLowerCase() === 'google' ||
+    event.title.toLowerCase() === 'google wfh';
 
 const STUB_TITLE = 'STUB EVENT';
 const addStubEventsForPadding =
@@ -214,7 +214,8 @@ const subcategoryToTree: {[subcategory in SummarySubcategory]: string[] } = {
     'FamilyFriends': ['Leisure', 'FamilyFriends'],
     'DaddyDuties': ['Leisure', 'DaddyDuties'],
     'Miscellaneous': ['Miscellaneous'],
-    'Sleep': ['Miscellaneous', 'Sleep']
+    'Sleep': ['Miscellaneous', 'Sleep'],
+    'TimeWasted': ['Miscellaneous', 'TimeWasted'],
 };
 
 const toTotalHours = ({period, events}: {period: string, events: IEvent[]}) =>
@@ -272,6 +273,8 @@ const getSubcategory = (e: IEvent): SummarySubcategory => {
             return 'Consulting';
         case Calendar.FamilyFriends:
             return 'FamilyFriends';
+        case Calendar.TimeWasted:
+            return 'TimeWasted';
     }
 };
 
