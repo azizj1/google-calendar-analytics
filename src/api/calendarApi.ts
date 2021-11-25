@@ -59,7 +59,7 @@ class CalendarApi {
         const promises = ids.map(c => this.calendarApi.Events.list(c, query) as IDataGoogleCalendarEvent[]);
         return flatMap((await Promise.all(promises)), (d, i) => d.map(this.toEventModel(i)))
             .filter(e => !e.isAllDay)
-            .sort((a, b) => a.start.toDate().getTime() - b.start.toDate().getTime());
+            .sort(this.compare);
     }
 
     toEventModel = (calendar: Calendar) => (e: IDataGoogleCalendarEvent): IEvent => {
@@ -76,6 +76,36 @@ class CalendarApi {
             location: e.location,
             durationHours: isAllDay ? 0 : end.diff(start, 'hours', true)
         };
+    }
+
+    compare = (a: IEvent, b: IEvent) => {
+      // the sooner event appears first in the list
+      const timeDiff = a.start.toDate().getTime() - b.start.toDate().getTime();
+      // the longer event appears first in the list
+      // if a is 5hrs and b is 2hrs, then durationDiff = -3, and so "a"
+      // will appear first.
+      const durationDiff = b.durationHours - a.durationHours;
+      if (timeDiff !== 0) {
+        return timeDiff;
+      } else if (durationDiff !== 0) {
+        return durationDiff;
+      } else {
+        return this.getCalendarRank(b) - this.getCalendarRank(a);
+      }
+    }
+
+    // work calendar has highest rank, so when it comes to sorting, if another
+    // event is at the same time and duration, then work event will appear
+    // first, which isn't' great because that means hours will be detected
+    // from the work event, not the lower ranking event.
+    getCalendarRank = (a: IEvent) => {
+      if (a.calendar === Calendar.Work) {
+        return 100;
+      } else if (a.calendar === Calendar.Personal) {
+        return 0;
+      } else {
+        return 50;
+      }
     }
 
     toMoment = (d: IDataEventTime) => d.dateTime == null ?

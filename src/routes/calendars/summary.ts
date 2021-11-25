@@ -36,26 +36,44 @@ const getThreeMonthsAgoInSameTimeZone = (utfOffset: number) => moment()
     .startOf('month')
     .subtract(3, 'months');
 
-const correctDurationForWork = (event: IEvent, index: number, events: IEvent[]) => {
-    if (event.calendar !== Calendar.Work || !isFullDayWorkEvent(event))
-        return event;
+const correctDurationForWork1 = (currEvent: IEvent, currIdx: number, allEvents: IEvent[]) => {
+  for (
+      let i = currIdx + 1;
+      i < EventSource.length && allEvents[i].start.isBetween(currEvent.start, currEvent.end, 'minute', '[)');
+      i++) {
+    // write code here.
+  }
+};
+
+const correctDurationForWork = (workEvent: IEvent, index: number, events: IEvent[]) => {
+    if (workEvent.calendar !== Calendar.Work || !isFullDayWorkEvent(workEvent))
+        return workEvent;
+    // 1pm    -------------->      10pm
+    // |-----someOtherEvent----|
+    //                     ||=====workEvent=====||
     for (let currIndex = index - 1;
-        currIndex >= 0 && event.start.isBetween(events[currIndex].start, events[currIndex].end, 'minute', '[)');
+        currIndex >= 0 && workEvent.start.isBetween(events[currIndex].start, events[currIndex].end, 'minute', '[)');
         currIndex--) {
-        event.durationHours -= Math.min(
-            events[currIndex].end.diff(event.start, 'hours', true),
-            event.end.diff(event.start, 'hours', true));
+        // in case this happens:
+        // |-------------someOtherEvent-----------------|
+        //                     ||=====workEvent=====||
+        workEvent.durationHours -= Math.min(
+            events[currIndex].end.diff(workEvent.start, 'hours', true),
+            workEvent.end.diff(workEvent.start, 'hours', true));
     }
 
+    // 1pm    -------------->      10pm
+    //    ||=====workEvent=====||
+    //            |-----someOtherEvent----|
     for (let currIndex = index + 1;
-        currIndex < events.length && events[currIndex].start.isBetween(event.start, event.end, 'minute', '[)');
+        currIndex < events.length && events[currIndex].start.isBetween(workEvent.start, workEvent.end, 'minute', '[)');
         currIndex++) {
-        event.durationHours -= Math.min(
-            event.end.diff(events[currIndex].start, 'hours', true),
+        workEvent.durationHours -= Math.min(
+            workEvent.end.diff(events[currIndex].start, 'hours', true),
             events[currIndex].end.diff(events[currIndex].start, 'hours', true));
     }
 
-    return event;
+    return workEvent;
 };
 
 const fixTimezone = (toTimezone: number) => (event: IEvent) => {
